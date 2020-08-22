@@ -1,0 +1,254 @@
+[
+  {
+    "name": "CR90 corvette",
+    "hyperdriveRating": 2,
+    "length": 150,
+    "costInCredits": 3500000,
+    "cargoCapacity": 3000000
+  },
+  {
+    "name": "Star Destroyer",
+    "hyperdriveRating": 2,
+    "length": 1600,
+    "costInCredits": 150000000,
+    "cargoCapacity": 36000000
+  },
+  {
+    "name": "Sentinel-class landing craft",
+    "hyperdriveRating": 1,
+    "length": 38,
+    "costInCredits": 240000,
+    "cargoCapacity": 180000
+  },
+  {
+    "name": "Death Star",
+    "hyperdriveRating": 4,
+    "length": 120000,
+    "costInCredits": 1000000000000,
+    "cargoCapacity": 1000000000000
+  },
+  {
+    "name": "Millennium Falcon",
+    "hyperdriveRating": 0.5,
+    "length": 34.37,
+    "costInCredits": 100000,
+    "cargoCapacity": 100000
+  },
+  {
+    "name": "Y-wing",
+    "hyperdriveRating": 1,
+    "length": 14,
+    "costInCredits": 134999,
+    "cargoCapacity": 110
+  },
+  {
+    "name": "X-wing",
+    "hyperdriveRating": 1,
+    "length": 12.5,
+    "costInCredits": 149999,
+    "cargoCapacity": 110
+  },
+  {
+    "name": "TIE Advanced x1",
+    "hyperdriveRating": 1,
+    "length": 9.2,
+    "costInCredits": null,
+    "cargoCapacity": 150
+  },
+  {
+    "name": "Executor",
+    "hyperdriveRating": 2,
+    "length": 19000,
+    "costInCredits": 1143350000,
+    "cargoCapacity": 250000000
+  },
+  {
+    "name": "Rebel transport",
+    "hyperdriveRating": 4,
+    "length": 90,
+    "costInCredits": null,
+    "cargoCapacity": 19000000
+  },
+  {
+    "name": "Slave 1",
+    "hyperdriveRating": 3,
+    "length": 21.5,
+    "costInCredits": null,
+    "cargoCapacity": 70000
+  },
+  {
+    "name": "Imperial shuttle",
+    "hyperdriveRating": 1,
+    "length": 20,
+    "costInCredits": 240000,
+    "cargoCapacity": 80000
+  },
+  {
+    "name": "EF76 Nebulon-B escort frigate",
+    "hyperdriveRating": 2,
+    "length": 300,
+    "costInCredits": 8500000,
+    "cargoCapacity": 6000000
+  },
+  {
+    "name": "Calamari Cruiser",
+    "hyperdriveRating": 1,
+    "length": 1200,
+    "costInCredits": 104000000,
+    "cargoCapacity": null
+  },
+  {
+    "name": "A-wing",
+    "hyperdriveRating": 1,
+    "length": 9.6,
+    "costInCredits": 175000,
+    "cargoCapacity": 40
+  },
+  {
+    "name": "B-wing",
+    "hyperdriveRating": 2,
+    "length": 16.9,
+    "costInCredits": 220000,
+    "cargoCapacity": 45
+  },
+  {
+    "name": "Republic Cruiser",
+    "hyperdriveRating": 2,
+    "length": 115,
+    "costInCredits": null,
+    "cargoCapacity": null
+  },
+  {
+    "name": "Droid control ship",
+    "hyperdriveRating": 2,
+    "length": 3170,
+    "costInCredits": null,
+    "cargoCapacity": 4000000000
+  },
+  {
+    "name": "Naboo fighter",
+    "hyperdriveRating": 1,
+    "length": 11,
+    "costInCredits": 200000,
+    "cargoCapacity": 65
+  },
+  {
+    "name": "Naboo Royal Starship",
+    "hyperdriveRating": 1.8,
+    "length": 76,
+    "costInCredits": null,
+    "cargoCapacity": null
+  },
+  {
+    "name": "Scimitar",
+    "hyperdriveRating": 1.5,
+    "length": 26.5,
+    "costInCredits": 55000000,
+    "cargoCapacity": 2500000
+  },
+  {
+    "name": "J-type diplomatic barge",
+    "hyperdriveRating": 0.7,
+    "length": 39,
+    "costInCredits": 2000000,
+    "cargoCapacity": null
+  },
+  {
+    "name": "AA-9 Coruscant freighter",
+    "hyperdriveRating": null,
+    "length": 390,
+    "costInCredits": null,
+    "cargoCapacity": null
+  },
+  {
+    "name": "Jedi starfighter",
+    "hyperdriveRating": 1,
+    "length": 8,
+    "costInCredits": 180000,
+    "cargoCapacity": 60
+  },
+  {
+    "name": "H-type Nubian yacht",
+    "hyperdriveRating": 0.9,
+    "length": 47.9,
+    "costInCredits": null,
+    "cargoCapacity": null
+  },
+  {
+    "name": "Republic Assault ship",
+    "hyperdriveRating": 0.6,
+    "length": 752,
+    "costInCredits": null,
+    "cargoCapacity": 11250000
+  },
+  {
+    "name": "Solar Sailer",
+    "hyperdriveRating": 1.5,
+    "length": 15.2,
+    "costInCredits": 35700,
+    "cargoCapacity": 240
+  },
+  {
+    "name": "Trade Federation cruiser",
+    "hyperdriveRating": 1.5,
+    "length": 1088,
+    "costInCredits": 125000000,
+    "cargoCapacity": 50000000
+  },
+  {
+    "name": "Theta-class T-2c shuttle",
+    "hyperdriveRating": 1,
+    "length": 18.5,
+    "costInCredits": 1000000,
+    "cargoCapacity": 50000
+  },
+  {
+    "name": "Republic attack cruiser",
+    "hyperdriveRating": 1,
+    "length": 1137,
+    "costInCredits": 59000000,
+    "cargoCapacity": 20000000
+  },
+  {
+    "name": "Naboo star skiff",
+    "hyperdriveRating": 0.5,
+    "length": 29.2,
+    "costInCredits": null,
+    "cargoCapacity": null
+  },
+  {
+    "name": "Jedi Interceptor",
+    "hyperdriveRating": 1,
+    "length": 5.47,
+    "costInCredits": 320000,
+    "cargoCapacity": 60
+  },
+  {
+    "name": "arc-170",
+    "hyperdriveRating": 1,
+    "length": 14.5,
+    "costInCredits": 155000,
+    "cargoCapacity": 110
+  },
+  {
+    "name": "Banking clan frigte",
+    "hyperdriveRating": 1,
+    "length": 825,
+    "costInCredits": 57000000,
+    "cargoCapacity": 40000000
+  },
+  {
+    "name": "Belbullab-22 starfighter",
+    "hyperdriveRating": 6,
+    "length": 6.71,
+    "costInCredits": 168000,
+    "cargoCapacity": 140
+  },
+  {
+    "name": "V-wing",
+    "hyperdriveRating": 1,
+    "length": 7.9,
+    "costInCredits": 102500,
+    "cargoCapacity": 60
+  }
+]
