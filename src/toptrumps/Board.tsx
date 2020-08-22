@@ -28,7 +28,6 @@ const Wrapper = styled.div`
     flex: 1 1;
   }
   div.players {
-    // height: 100%;
     padding: 5pt;
 
     display: flex;
@@ -71,13 +70,13 @@ export const Board: React.FC = () => {
     <Wrapper>
       <div className="content">
         <div className="players them">
-          <Player name="Lape Kale" card={c1} stackLength={20}></Player>
-          <Player name="Gitanas Nauseda" card={c2} stackLength={1}></Player>
+          <Player name="Lape Kale" card={c1} stackLength={20} actionRequired={false} />
+          <Player name="Gitanas Nauseda" card={c2} stackLength={1} actionRequired={true} />
         </div>
       </div>
       <div className="footer">
         <div className="players us">
-          <Player name="Luke 10x" card={c3} stackLength={8}></Player>
+            <Player name="Luke 10x" card={c3} stackLength={8} actionRequired={true} />
         </div>
       </div>
     </Wrapper>

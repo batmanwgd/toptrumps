@@ -41,6 +41,7 @@ interface PlayerProps {
   name: string;
   card: Card;
   stackLength: number;
+  actionRequired: boolean;
 }
 
 export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
@@ -50,7 +51,7 @@ export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
         <div className="name">{props.name}</div>
         <div className="stack">{props.stackLength}</div>
       </div>
-      <CardComponent card={props.card} />
+      <CardComponent card={props.card} actionRequired={props.actionRequired} />
     </Wrapper>
   );
 };

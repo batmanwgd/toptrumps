@@ -1,40 +1,40 @@
-import React, { useState, MouseEvent, useRef, useEffect } from 'react';
+import React, { useState, MouseEvent } from 'react';
 import styled from 'styled-components';
-import ReactCardFlip from 'react-card-flip';
 
 import { Card as CardType, OpenCard } from './types';
 import { breakpointSmall } from './constants';
+import { SizedCardFlip } from './SizedCardFlip';
 
 const Wrapper = styled.div`
   .back {
-    .card {
-      visibility: hidden;
-    }
-    .overlay {
-      border-radius: 5pt;
-
-      width: 100%;
-      position: absolute;
-
-      overflow: hidden;
-    }
-  }
-
-  .realBack {
-    background: red;
+    border: 3px solid #61b2e4;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 5pt;
 
-    cursor: pointer;
+    box-sizing: border-box;
+
+    background: #92d3f5;
 
     .text {
       text-align: center;
-      border: 1px solid yellow;
+      color: #fff;
     }
   }
-
+  .active.back {
+    border: 3px solid #d22f27;
+    background: #ea5a47;
+    cursor: pointer;
+  }
+  .card {
+    margin: 1px;
+    border: 3px solid #f1b31c;
+  }
+  .active .back {
+    border: 3px solid red;
+  }
   display: flex;
   flex-direction: column;
   .name {
@@ -102,47 +102,27 @@ const renderOpenCard = (card: OpenCard) => {
 
 interface CardProps {
   card: CardType;
+  actionRequired: boolean;
 }
 
 export const Card: React.FC<CardProps> = (props: CardProps) => {
   const card = props.card;
-  const faceRef = useRef(null);
 
   const [isFlipped, setFlipped] = useState<boolean>(false);
-  const [cardHeight, setCardHeight] = useState<number>(0);
-  const [winSize, setWinSize] = useState<string>('0x0');
   const handleOpenCard = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     setFlipped(true);
   };
-  React.useEffect(() => {
-    function handleResize() {
-      setWinSize(window.innerWidth + 'x' + window.innerHeight);
-      console.log('resized to: ', window.innerWidth, 'x', window.innerHeight)
-    }
-    window.addEventListener('resize', handleResize);
-  });
-  useEffect(() => {
-    const spacerEl: HTMLElement | null = faceRef?.current;
-    if (spacerEl !== null) {
-      setCardHeight((spacerEl as Element).clientHeight);
-      console.log('effe', (spacerEl as Element).clientHeight);
-    }
-  }, [winSize]);
+
   const OpenCard = renderOpenCard(card as OpenCard);
   return (
     <Wrapper>
-      <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
-        <div className="back" ref={faceRef}>
-          <div className="overlay" style={{ height: cardHeight }}>
-            <div className="realBack" onClick={handleOpenCard}>
-              <div className="text">Show your card!</div>
-            </div>
-          </div>
-          {OpenCard}
+      <SizedCardFlip isFlipped={isFlipped} flipDirection="horizontal">
+        <div className={`back ${props.actionRequired ? 'active' : ''}`} onClick={handleOpenCard}>
+          <div className="text">Show your card!</div>
         </div>
-        <div className="front">{OpenCard}</div>
-      </ReactCardFlip>
+        {OpenCard}
+      </SizedCardFlip>
     </Wrapper>
   );
 };
