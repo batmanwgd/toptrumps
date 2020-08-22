@@ -76,7 +76,7 @@ export const Board: React.FC = () => {
       </div>
       <div className="footer">
         <div className="players us">
-            <Player name="Luke 10x" card={c3} stackLength={8} actionRequired={true} />
+          <Player name="Luke 10x" card={c3} stackLength={8} actionRequired={true} />
         </div>
       </div>
     </Wrapper>
