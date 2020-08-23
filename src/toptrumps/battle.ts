@@ -27,9 +27,7 @@ export type BattleAction =
   | { actionType: 'Select' }
   | { actionType: 'ShowHand' };
 
-
 export const battleReducer = (state: BattleState, action: BattleAction): BattleState => {
-  console.log('statistika', action);
   switch (action.actionType) {
     case 'TakeTopCard':
       return {

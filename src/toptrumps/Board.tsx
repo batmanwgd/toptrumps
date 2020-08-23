@@ -100,21 +100,13 @@ export const Board: React.FC = () => {
   const [tick, setTick] = useState<number>(0);
 
   useEffect(() => {
-    // console.log(state);
-    setSelectedSkill(state.selectedSkill || -1);
-
     const action = getNaturalAction(state);
-    if (action.actionType === 'Select') {
-      setTimeout(() => {
-        dispatch(action);
-      }, 2000);
-    } else {
-      dispatch(action);
-    }
+    dispatch(action);
 
+    const tickDelay = action.actionType === 'RollSkills' ? 2000 : 600;
     setTimeout(() => {
       setTick(tick + 1);
-    }, 800);
+    }, tickDelay);
   }, [tick]);
 
   return (
