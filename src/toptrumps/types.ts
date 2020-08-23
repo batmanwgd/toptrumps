@@ -13,6 +13,7 @@ export interface OpenCard {
   type: 'open';
   name: string;
   skills: Skills;
+  open: boolean;
 }
 
 export type Card = OpenCard | ClosedCard;

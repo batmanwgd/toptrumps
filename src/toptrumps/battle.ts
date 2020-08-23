@@ -34,8 +34,6 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
             if (player.hand === undefined) {
               const hand = player.stack.slice(-1)[0];
               const stack = player.stack.slice(0, -1);
-              // console.log(player.name, hand, stack);
-              // const hand = player.stack.pop();
               return { ...player, stack, hand };
             }
           }
@@ -48,6 +46,23 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
       return {
         ...state,
         phase: action.phase,
+      };
+
+    case 'ShowLeaderHand':
+      return {
+        ...state,
+        players: state.players.map((player: PlayerData, key) => {
+          if (key === state.leaderIndex) {
+            const hand = player.hand as OpenCard;
+            if (!hand) {
+              throw new Error('Leader has no hand so cannot show it');
+            }
+            const openHand: OpenCard = { ...hand, open: true };
+            return { ...player, hand: openHand };
+          }
+          return player;
+        }),
+        phase: 'one_open',
       };
   }
 
@@ -68,7 +83,6 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
         return { actionType: 'SetPhase', phase: 'closed' };
       } else throw new Error('Error wile dealing in clear');
     case 'closed':
-      // return { 'SetActiveIndex': state.leaderIndex };
       return { actionType: 'ShowLeaderHand' };
   }
 

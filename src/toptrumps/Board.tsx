@@ -64,6 +64,7 @@ export const Board: React.FC = () => {
           costInCredits: spaceship.costInCredits,
           cargoCapacity: spaceship.cargoCapacity,
         },
+        open: false,
       };
     });
 
@@ -100,7 +101,7 @@ export const Board: React.FC = () => {
 
     setTimeout(() => {
       setTick(tick + 1);
-    }, 2000);
+    }, 800);
   }, [tick]);
 
   return (

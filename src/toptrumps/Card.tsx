@@ -1,7 +1,7 @@
-import React, { useState, MouseEvent } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
-import { Card as CardType } from './types';
+import { Card as CardType, OpenCard } from './types';
 import { SizedCardFlip } from './SizedCardFlip';
 import { CardInfo } from './CardInfo';
 
@@ -35,17 +35,12 @@ interface CardProps {
 
 export const Card: React.FC<CardProps> = (props: CardProps) => {
   const card = props.card;
-
-  const [isFlipped, setFlipped] = useState<boolean>(false);
-  const handleOpenCard = (e: MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    setFlipped(true);
-  };
+  const openCard = card as OpenCard;
 
   return (
     <Wrapper>
-      <SizedCardFlip isFlipped={isFlipped} flipDirection="horizontal">
-        <div className={`back ${props.actionRequired ? 'active' : ''}`} onClick={handleOpenCard}>
+      <SizedCardFlip isFlipped={openCard.open} flipDirection="horizontal">
+        <div className={`back ${props.actionRequired ? 'active' : ''}`}>
           <div className="text">Show your card!</div>
         </div>
         <CardInfo card={card} />
