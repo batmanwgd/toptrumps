@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Player } from './Player';
-import { Card } from './types';
+import { OpenCard } from './types';
 import spaceshipData from './spaceships.json';
 import { breakpointSmall } from './constants';
+import { BattleState, BattleAction, battleReducer, PlayerData, getNaturalAction } from './battle';
 
 interface Spaceship {
   name: string;
@@ -49,7 +50,7 @@ const Wrapper = styled.div`
 `;
 
 export const Board: React.FC = () => {
-  const [c1, c2, c3]: Card[] = spaceships
+  const allCards: OpenCard[] = spaceships
     .filter((s: Spaceship) => s.cargoCapacity && s.costInCredits && s.hyperdriveRating && s.length)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .sort(() => Math.random() - 0.5)
@@ -66,17 +67,54 @@ export const Board: React.FC = () => {
       };
     });
 
+  const [c1, c2, c3] = allCards;
+  const [state, dispatch] = useReducer<React.Reducer<BattleState, BattleAction>>(battleReducer, {
+    players: [
+      { name: 'gitanas nauseda', stack: [c1] },
+      { name: 'celofanas', stack: [c2] },
+      { name: 'luke 10x', stack: [c3] },
+    ],
+    leaderIndex: 0,
+    activeIndex: 0,
+    phase: 'clear',
+  });
+
+  const foes = state.players.slice(0, -1);
+  const me: PlayerData = state.players.slice(-1)[0];
+
+  const playerDataToProps = (data: PlayerData) => {
+    return {
+      name: data.name,
+      card: data.hand,
+      stackLength: data.stack.length,
+      actionRequired: false,
+    };
+  };
+
+  const [tick, setTick] = useState<number>(0);
+
+  useEffect(() => {
+    console.log(state);
+
+    dispatch(getNaturalAction(state));
+
+    setTimeout(() => {
+      setTick(tick + 1);
+    }, 2000);
+  }, [tick]);
+
   return (
     <Wrapper>
       <div className="content">
         <div className="players them">
-          <Player name="Lape Kale" card={c1} stackLength={20} actionRequired={false} />
-          <Player name="Gitanas Nauseda" card={c2} stackLength={1} actionRequired={true} />
+          {foes.map((p: PlayerData, key) => {
+            return <Player key={key} {...playerDataToProps(p)} />;
+          })}
         </div>
       </div>
       <div className="footer">
         <div className="players us">
-          <Player name="Luke 10x" card={c3} stackLength={8} actionRequired={true} />
+          <Player {...playerDataToProps(me)} />
         </div>
       </div>
     </Wrapper>

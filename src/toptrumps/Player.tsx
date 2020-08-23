@@ -39,7 +39,7 @@ const Wrapper = styled.div`
 
 interface PlayerProps {
   name: string;
-  card: Card;
+  card?: Card;
   stackLength: number;
   actionRequired: boolean;
 }
@@ -51,7 +51,7 @@ export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
         <div className="name">{props.name}</div>
         <div className="stack">{props.stackLength}</div>
       </div>
-      <CardComponent card={props.card} actionRequired={props.actionRequired} />
+      {props.card && <CardComponent card={props.card} actionRequired={props.actionRequired} />}
     </Wrapper>
   );
 };
