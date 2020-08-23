@@ -24,12 +24,14 @@ export type BattleAction =
   | { actionType: 'SetActiveIndex'; index: number }
   | { actionType: 'ShowLeaderHand' }
   | { actionType: 'RollSkills' }
-  | { actionType: 'Select' };
+  | { actionType: 'Select' }
+  | { actionType: 'ShowHand' };
+
 
 export const battleReducer = (state: BattleState, action: BattleAction): BattleState => {
+  console.log('statistika', action);
   switch (action.actionType) {
     case 'TakeTopCard':
-      const activeIndex = (state.activeIndex + 1) % state.players.length;
       return {
         ...state,
         players: state.players.map((player: PlayerData, key) => {
@@ -42,7 +44,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
           }
           return player;
         }),
-        activeIndex,
+        activeIndex: (state.activeIndex + 1) % state.players.length,
       };
 
     case 'SetPhase':
@@ -67,6 +69,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         }),
         phase: 'one_open',
       };
+
     case 'RollSkills':
       return {
         ...state,
@@ -99,7 +102,24 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
           return player;
         }),
         phase: 'selected',
+        activeIndex: (state.activeIndex + 1) % state.players.length,
         selectedSkill: 1,
+      };
+    case 'ShowHand':
+      return {
+        ...state,
+        players: state.players.map((player: PlayerData, key) => {
+          if (key === state.activeIndex) {
+            const hand = player.hand as OpenCard;
+            if (!hand) {
+              throw new Error('Leader has no hand so cannot show it');
+            }
+            const openHand: OpenCard = { ...hand, open: true };
+            return { ...player, hand: openHand };
+          }
+          return player;
+        }),
+        activeIndex: (state.activeIndex + 1) % state.players.length,
       };
   }
 
@@ -125,8 +145,10 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
       return { actionType: 'RollSkills' };
     case 'rolling':
       return { actionType: 'Select' };
-
-    
+    case 'selected':
+      if (activePlayer.hand && activePlayer.hand.open === false) {
+        return { actionType: 'ShowHand' };
+      }
   }
 
   return { actionType: 'Reset' };

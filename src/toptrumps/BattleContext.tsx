@@ -1,4 +1,4 @@
-import React, { useState, PropsWithChildren } from 'react';
+import React, { useState } from 'react';
 
 interface BattleContextProps {
   selectedSkill: number;
@@ -7,8 +7,9 @@ interface BattleContextProps {
 
 export const BattleContext = React.createContext<BattleContextProps>({
   selectedSkill: -10,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setSelectedSkill: () => { console.log('abuojas debesis'); },
+  setSelectedSkill: () => {
+    console.error('😕 Context setter called before it is initialized');
+  },
 });
 
 // export const BattleConsumer = BattleContext.Consumer;

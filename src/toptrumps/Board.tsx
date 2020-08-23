@@ -100,7 +100,7 @@ export const Board: React.FC = () => {
   const [tick, setTick] = useState<number>(0);
 
   useEffect(() => {
-    console.log(state);
+    // console.log(state);
     setSelectedSkill(state.selectedSkill || -1);
 
     const action = getNaturalAction(state);
