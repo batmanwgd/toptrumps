@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Card as CardType, OpenCard } from './types';
 import { breakpointSmall } from './constants';
+import { useBattleContext } from './BattleContext';
 
 const Wrapper = styled.div`
   margin: 1px;
@@ -32,7 +33,12 @@ const Wrapper = styled.div`
       display: flex;
       padding: 10pt;
       content-justify: space-between;
-
+      &.flash {
+        background: #f1b31c;
+      }
+      &.selected {
+        background: #f1b31c;
+      }
       .ability {
         flex: 1;
         text-align: left;
@@ -54,23 +60,37 @@ interface CardInfoProps {
 export const CardInfo: React.FC<CardInfoProps> = (props: CardInfoProps) => {
   const card = props.card as OpenCard;
 
+  const [flash, setFlash] = useState<number>(-1);
+
+  useEffect(() => {
+    if (card.roll) {
+      setTimeout(() => {
+        setFlash((flash + 1) % 4);
+      }, 200);
+    } else {
+      setFlash(-1);
+    }
+  }, [flash, card.roll]);
+
+  const { selectedSkill } = useBattleContext();
+
   return (
     <Wrapper>
-      <div className="name">{card.name}</div>
+      <div className="name">{card.name} {selectedSkill}</div>
       <ul className="scores">
-        <li className="abilityLine">
+        <li className={`abilityLine ${flash === 0 ? 'flash' : ''} ${selectedSkill === 0 ? 'selected' : ''}`}>
           <span className="ability">Cost:</span>
           <span className="value">{card.skills.costInCredits}</span>
         </li>
-        <li className="abilityLine">
+        <li className={`abilityLine ${flash === 1 ? 'flash' : ''} ${selectedSkill === 1 ? 'selected' : ''}`}>
           <span className="ability">H-Rating:</span>
           <span className="value">{card.skills.hyperdriveRating}</span>
         </li>
-        <li className="abilityLine">
+        <li className={`abilityLine ${flash === 2 ? 'flash' : ''} ${selectedSkill === 2 ? 'selected' : ''}`}>
           <span className="ability">Length:</span>
           <span className="value">{card.skills.length}</span>
         </li>
-        <li className="abilityLine">
+        <li className={`abilityLine ${flash === 3 ? 'flash' : ''} ${selectedSkill === 3 ? 'selected' : ''}`}>
           <span className="ability">Cargo:</span>
           <span className="value">{card.skills.cargoCapacity}</span>
         </li>

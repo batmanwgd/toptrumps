@@ -1,10 +1,11 @@
-import React, { useReducer, useEffect, useState } from 'react';
+import React, { useReducer, useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { Player } from './Player';
 import { OpenCard } from './types';
 import spaceshipData from './spaceships.json';
 import { breakpointSmall } from './constants';
 import { BattleState, BattleAction, battleReducer, PlayerData, getNaturalAction } from './battle';
+import { BattleProvider, useBattleContext, BattleContext } from './BattleContext';
 
 interface Spaceship {
   name: string;
@@ -65,6 +66,7 @@ export const Board: React.FC = () => {
           cargoCapacity: spaceship.cargoCapacity,
         },
         open: false,
+        roll: false,
       };
     });
 
@@ -79,6 +81,9 @@ export const Board: React.FC = () => {
     activeIndex: 0,
     phase: 'clear',
   });
+
+  const { setSelectedSkill } = useBattleContext();
+  setSelectedSkill(state.selectedSkill || -1);
 
   const foes = state.players.slice(0, -1);
   const me: PlayerData = state.players.slice(-1)[0];
@@ -96,8 +101,16 @@ export const Board: React.FC = () => {
 
   useEffect(() => {
     console.log(state);
+    setSelectedSkill(state.selectedSkill || -1);
 
-    dispatch(getNaturalAction(state));
+    const action = getNaturalAction(state);
+    if (action.actionType === 'Select') {
+      setTimeout(() => {
+        dispatch(action);
+      }, 2000);
+    } else {
+      dispatch(action);
+    }
 
     setTimeout(() => {
       setTick(tick + 1);
@@ -114,6 +127,7 @@ export const Board: React.FC = () => {
         </div>
       </div>
       <div className="footer">
+        {}
         <div className="players us">
           <Player {...playerDataToProps(me)} />
         </div>

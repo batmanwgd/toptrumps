@@ -6,13 +6,14 @@ export interface PlayerData {
   hand?: OpenCard;
 }
 
-export type Phase = 'clear' | 'closed' | 'one_open' | 'selected' | 'all_open';
+export type Phase = 'clear' | 'closed' | 'one_open' | 'rolling' | 'selected' | 'all_open';
 
 export interface BattleState {
   players: PlayerData[];
   leaderIndex: number;
   activeIndex: number;
   phase: Phase;
+  selectedSkill?: number;
 }
 
 export type BattleAction =
@@ -21,7 +22,9 @@ export type BattleAction =
   | { actionType: 'TakeTopCard'; playerIndex: number }
   | { actionType: 'SetPhase'; phase: Phase }
   | { actionType: 'SetActiveIndex'; index: number }
-  | { actionType: 'ShowLeaderHand' };
+  | { actionType: 'ShowLeaderHand' }
+  | { actionType: 'RollSkills' }
+  | { actionType: 'Select' };
 
 export const battleReducer = (state: BattleState, action: BattleAction): BattleState => {
   switch (action.actionType) {
@@ -64,6 +67,40 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         }),
         phase: 'one_open',
       };
+    case 'RollSkills':
+      return {
+        ...state,
+        players: state.players.map((player: PlayerData, key) => {
+          if (key === state.leaderIndex) {
+            const hand = player.hand as OpenCard;
+            if (!hand) {
+              throw new Error('Leader has no hand so cannot roll it');
+            }
+            const openHand: OpenCard = { ...hand, roll: true };
+            return { ...player, hand: openHand };
+          }
+          return player;
+        }),
+        phase: 'rolling',
+      };
+
+    case 'Select':
+      return {
+        ...state,
+        players: state.players.map((player: PlayerData, key) => {
+          if (key === state.leaderIndex) {
+            const hand = player.hand as OpenCard;
+            if (!hand) {
+              throw new Error('Leader has no hand so cannot roll it');
+            }
+            const openHand: OpenCard = { ...hand, roll: false };
+            return { ...player, hand: openHand };
+          }
+          return player;
+        }),
+        phase: 'selected',
+        selectedSkill: 1,
+      };
   }
 
   return state;
@@ -74,7 +111,7 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
   switch (state.phase) {
     case 'clear':
       if (activePlayer.hand === undefined && activePlayer.stack.length > 0) {
-        return { actionType: 'TakeTopCard', playerIndex: 123 }
+        return { actionType: 'TakeTopCard', playerIndex: 123 };
       }
       const allAliveHaveHands = state.players.every((player: PlayerData) => {
         return player.hand || player.stack.length === 0;
@@ -84,6 +121,12 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
       } else throw new Error('Error wile dealing in clear');
     case 'closed':
       return { actionType: 'ShowLeaderHand' };
+    case 'one_open':
+      return { actionType: 'RollSkills' };
+    case 'rolling':
+      return { actionType: 'Select' };
+
+    
   }
 
   return { actionType: 'Reset' };
