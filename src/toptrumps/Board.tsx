@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useState, useContext } from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Player } from './Player';
 import { OpenCard } from './types';
@@ -87,12 +87,13 @@ export const Board: React.FC = () => {
   const foes = state.players.slice(0, -1);
   const me: PlayerData = state.players.slice(-1)[0];
 
-  const playerDataToProps = (data: PlayerData) => {
+  const playerDataToProps = (data: PlayerData, isWinner: boolean) => {
     return {
       name: data.name,
       card: data.hand,
       stackLength: data.stack.length,
       actionRequired: false,
+      isWinner: isWinner,
     };
   };
 
@@ -107,8 +108,7 @@ export const Board: React.FC = () => {
           dispatch({ actionType: 'ShowHand' });
         },
       ]);
-
-      // TODO start ticking again
+      setTick(tick + 1);
     } else {
       setChoices([]);
     }
@@ -121,7 +121,7 @@ export const Board: React.FC = () => {
     if (action.actionType === 'StopBeforeShowHand') {
       return;
     }
-
+    console.log('state', state);
     const tickDelay = action.actionType === 'RollSkills' ? 2000 : 600;
     setTimeout(() => {
       setTick(tick + 1);
@@ -133,14 +133,14 @@ export const Board: React.FC = () => {
       <div className="content">
         <div className="players them">
           {foes.map((p: PlayerData, key) => {
-            return <Player key={key} {...playerDataToProps(p)} />;
+            const isWinner = key === state.winnerIndex;
+            return <Player key={key} {...playerDataToProps(p, isWinner)} />;
           })}
         </div>
       </div>
       <div className="footer">
-        {}
         <div className="players us">
-          <Player {...playerDataToProps(me)} />
+          <Player {...playerDataToProps(me, state.winnerIndex === foes.length)} />
         </div>
       </div>
     </Wrapper>

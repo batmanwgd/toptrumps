@@ -16,6 +16,7 @@ export interface BattleState {
   activeIndex: number;
   phase: Phase;
   selectedSkill?: number;
+  winnerIndex?: number;
 }
 
 export type BattleAction =
@@ -28,10 +29,11 @@ export type BattleAction =
   | { actionType: 'RollSkills' }
   | { actionType: 'Select' }
   | { actionType: 'ShowHand' }
-  | { actionType: 'StopBeforeShowHand' };
+  | { actionType: 'StopBeforeShowHand' }
+  | { actionType: 'FindWinner' };
 
 export const battleReducer = (state: BattleState, action: BattleAction): BattleState => {
-  console.log('reduce', action.actionType);
+  console.log('State:', state.phase, ' + ', action.actionType);
   switch (action.actionType) {
     case 'TakeTopCard':
       return {
@@ -108,7 +110,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         selectedSkill: 1,
       };
     case 'ShowHand':
-      return {
+      const stateAfterShowHand: BattleState = {
         ...state,
         players: state.players.map((player: PlayerData, key) => {
           if (key === state.activeIndex) {
@@ -125,11 +127,40 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
 
         activeIndex: (state.activeIndex + 1) % state.players.length,
       };
+      if (
+        stateAfterShowHand.players.every((player: PlayerData) => {
+          return player.hand === undefined || player.hand.open;
+        })
+      ) {
+        stateAfterShowHand.phase = 'all_open';
+      }
+      return stateAfterShowHand;
 
     case 'StopBeforeShowHand':
       return {
         ...state,
         phase: 'selected_stopped',
+      };
+    case 'FindWinner':
+      const selectedSkillValues = state.players.map((player: PlayerData) => {
+        if (!player.hand) {
+          return 0;
+        }
+        switch (state.selectedSkill) {
+          case 0:
+            return player.hand.skills.cargoCapacity;
+          case 1:
+            return player.hand.skills.hyperdriveRating;
+          case 2:
+            return player.hand.skills.costInCredits;
+          case 3:
+            return player.hand.skills.length;
+        }
+        return 0;
+      });
+      return {
+        ...state,
+        winnerIndex: selectedSkillValues.indexOf(Math.max(...selectedSkillValues)),
       };
   }
 
@@ -162,6 +193,8 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
       if (activePlayer.hand && activePlayer.hand.open === false && activePlayer.nature === 'human') {
         return { actionType: 'StopBeforeShowHand' };
       }
+    case 'all_open':
+      return { actionType: 'FindWinner' };
   }
 
   return { actionType: 'Reset' };

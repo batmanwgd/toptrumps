@@ -8,9 +8,6 @@ import { useBattleContext } from './BattleContext';
 const Wrapper = styled.div`
   margin: 1px;
   border: 3px solid #f1b31c;
-  .active .back {
-    border: 3px solid red;
-  }
   display: flex;
   flex-direction: column;
   .name {
@@ -75,8 +72,8 @@ export const CardInfo: React.FC<CardInfoProps> = (props: CardInfoProps) => {
   const { selectedSkill } = useBattleContext();
 
   return (
-    <Wrapper>
-      <div className="name">{card.name} {selectedSkill}</div>
+    <Wrapper className="card">
+      <div className="name">{card.name}</div>
       <ul className="scores">
         <li className={`abilityLine ${flash === 0 ? 'flash' : ''} ${selectedSkill === 0 ? 'selected' : ''}`}>
           <span className="ability">Cost:</span>

@@ -1,15 +1,33 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Card } from './types';
 import { Card as CardComponent } from './Card';
 import { breakpointSmall } from './constants';
 import { CardInfo } from './CardInfo';
+
+const shine = keyframes`
+  {
+    0% {
+      background: auto;
+    }
+    50% {
+      background: #ea5a47;
+    }
+    100% {
+      background: auto;
+    }
+  }
+`;
 
 const Wrapper = styled.div`
   text-transform: uppercase;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
+  .winner .card .selected {
+    animation: ${shine} 1s linear;
+    animation-iteration-count: infinite;
+  }
   & > .title {
     font-size: 0.75em;
     padding: 6pt 0;
@@ -43,6 +61,7 @@ interface PlayerProps {
   card?: Card;
   stackLength: number;
   actionRequired: boolean;
+  isWinner: boolean;
 }
 
 const ghostCardProps: Card = {
@@ -76,7 +95,11 @@ export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
         <div className="name">{props.name}</div>
         <div className="stack">{props.stackLength}</div>
       </div>
-      {props.card && <CardComponent card={props.card} />}
+      {props.card && (
+        <div className={`${props.isWinner ? 'winner' : ''}`}>
+          <CardComponent card={props.card} />
+        </div>
+      )}
       {!props.card && ghostCard}
     </Wrapper>
   );

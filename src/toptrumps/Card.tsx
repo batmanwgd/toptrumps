@@ -1,12 +1,23 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import { Card as CardType, OpenCard } from './types';
 import { SizedCardFlip } from './SizedCardFlip';
 import { CardInfo } from './CardInfo';
 import { useBattleContext } from './BattleContext';
 
+const appear = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
 const Wrapper = styled.div`
+  animation: ${appear} 0.2s linear;
+
   .back {
     border: 3px solid #61b2e4;
     height: 100%;
