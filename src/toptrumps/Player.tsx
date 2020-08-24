@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Card } from './types';
 import { Card as CardComponent } from './Card';
 import { breakpointSmall } from './constants';
+import { CardInfo } from './CardInfo';
 
 const Wrapper = styled.div`
   text-transform: uppercase;
@@ -44,6 +45,30 @@ interface PlayerProps {
   actionRequired: boolean;
 }
 
+const ghostCardProps: Card = {
+  name: '???',
+  open: true,
+  roll: false,
+  type: 'open',
+  skills: {
+    cargoCapacity: 0,
+    costInCredits: 0,
+    length: 0,
+    hyperdriveRating: 0,
+  },
+};
+
+const Invisible = styled.div`
+  visibility: hidden;
+`;
+
+const ghostCard = (
+  <Invisible>
+    <CardInfo card={ghostCardProps} />
+  </Invisible>
+);
+
+// const props.card
 export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
   return (
     <Wrapper>
@@ -51,7 +76,8 @@ export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
         <div className="name">{props.name}</div>
         <div className="stack">{props.stackLength}</div>
       </div>
-      {props.card && <CardComponent card={props.card} actionRequired={props.actionRequired} />}
+      {props.card && <CardComponent card={props.card} />}
+      {!props.card && ghostCard}
     </Wrapper>
   );
 };

@@ -31,7 +31,6 @@ const Wrapper = styled.div`
 
 interface CardProps {
   card: CardType;
-  actionRequired: boolean;
 }
 
 export const Card: React.FC<CardProps> = (props: CardProps) => {

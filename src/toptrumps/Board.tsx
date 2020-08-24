@@ -5,7 +5,7 @@ import { OpenCard } from './types';
 import spaceshipData from './spaceships.json';
 import { breakpointSmall } from './constants';
 import { BattleState, BattleAction, battleReducer, PlayerData, getNaturalAction } from './battle';
-import { BattleProvider, useBattleContext, BattleContext } from './BattleContext';
+import { useBattleContext } from './BattleContext';
 
 interface Spaceship {
   name: string;
