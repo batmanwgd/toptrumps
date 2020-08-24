@@ -53,7 +53,6 @@ const Wrapper = styled.div`
 export const Board: React.FC = () => {
   const allCards: OpenCard[] = spaceships
     .filter((s: Spaceship) => s.cargoCapacity && s.costInCredits && s.hyperdriveRating && s.length)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .sort(() => Math.random() - 0.5)
     .map((spaceship: Spaceship) => {
       return {
@@ -73,16 +72,16 @@ export const Board: React.FC = () => {
   const [c1, c2, c3] = allCards;
   const [state, dispatch] = useReducer<React.Reducer<BattleState, BattleAction>>(battleReducer, {
     players: [
-      { name: 'gitanas nauseda', stack: [c1] },
-      { name: 'celofanas', stack: [c2] },
-      { name: 'luke 10x', stack: [c3] },
+      { name: 'gitanas nauseda', stack: [c1], nature: 'bot' },
+      { name: 'celofanas', stack: [c2], nature: 'bot' },
+      { name: 'luke 10x', stack: [c3], nature: 'human' },
     ],
     leaderIndex: 0,
     activeIndex: 0,
     phase: 'clear',
   });
 
-  const { setSelectedSkill } = useBattleContext();
+  const { setSelectedSkill, setChoices } = useBattleContext();
   setSelectedSkill(state.selectedSkill || -1);
 
   const foes = state.players.slice(0, -1);
@@ -99,9 +98,29 @@ export const Board: React.FC = () => {
 
   const [tick, setTick] = useState<number>(0);
 
+  const isStopped = state.phase === 'selected_stopped';
+
+  useEffect(() => {
+    if (state.phase === 'selected_stopped') {
+      setChoices([
+        () => {
+          dispatch({ actionType: 'ShowHand' });
+        },
+      ]);
+
+      // TODO start ticking again
+    } else {
+      setChoices([]);
+    }
+  }, [isStopped]);
+
   useEffect(() => {
     const action = getNaturalAction(state);
     dispatch(action);
+
+    if (action.actionType === 'StopBeforeShowHand') {
+      return;
+    }
 
     const tickDelay = action.actionType === 'RollSkills' ? 2000 : 600;
     setTimeout(() => {

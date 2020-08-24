@@ -1,12 +1,14 @@
 import { OpenCard } from './types';
 
+type Nature = 'human' | 'bot';
 export interface PlayerData {
   name: string;
   stack: OpenCard[];
   hand?: OpenCard;
+  nature: Nature;
 }
 
-export type Phase = 'clear' | 'closed' | 'one_open' | 'rolling' | 'selected' | 'all_open';
+export type Phase = 'clear' | 'closed' | 'one_open' | 'rolling' | 'selected' | 'selected_stopped' | 'all_open';
 
 export interface BattleState {
   players: PlayerData[];
@@ -25,9 +27,11 @@ export type BattleAction =
   | { actionType: 'ShowLeaderHand' }
   | { actionType: 'RollSkills' }
   | { actionType: 'Select' }
-  | { actionType: 'ShowHand' };
+  | { actionType: 'ShowHand' }
+  | { actionType: 'StopBeforeShowHand' };
 
 export const battleReducer = (state: BattleState, action: BattleAction): BattleState => {
+  console.log('reduce', action.actionType);
   switch (action.actionType) {
     case 'TakeTopCard':
       return {
@@ -117,7 +121,15 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
           }
           return player;
         }),
+        phase: 'selected',
+
         activeIndex: (state.activeIndex + 1) % state.players.length,
+      };
+
+    case 'StopBeforeShowHand':
+      return {
+        ...state,
+        phase: 'selected_stopped',
       };
   }
 
@@ -144,8 +156,11 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
     case 'rolling':
       return { actionType: 'Select' };
     case 'selected':
-      if (activePlayer.hand && activePlayer.hand.open === false) {
+      if (activePlayer.hand && activePlayer.hand.open === false && activePlayer.nature === 'bot') {
         return { actionType: 'ShowHand' };
+      }
+      if (activePlayer.hand && activePlayer.hand.open === false && activePlayer.nature === 'human') {
+        return { actionType: 'StopBeforeShowHand' };
       }
   }
 
