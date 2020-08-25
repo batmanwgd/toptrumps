@@ -17,7 +17,7 @@ export type Phase =
   | 'selected'
   | 'selected_stopped'
   | 'all_open'
-  | 'reset';
+  | 'finalize';
 
 export interface BattleState {
   players: PlayerData[];
@@ -41,7 +41,8 @@ export type BattleAction =
   | { actionType: 'StopBeforeShowHand' }
   | { actionType: 'FindWinner' }
   | { actionType: 'GiveHandToWinnerStack' }
-  | { actionType: 'EndTrick' };
+  | { actionType: 'EndTrick' }
+  | { actionType: 'EndGame' };
 
 export const battleReducer = (state: BattleState, action: BattleAction): BattleState => {
   console.log('State:', state.phase, ' + ', action.actionType);
@@ -217,7 +218,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
 
       return {
         ...state2,
-        phase: allGaveTheirHands ? 'reset' : 'selected',
+        phase: allGaveTheirHands ? 'finalize' : 'selected',
         activeIndex: (state.activeIndex + 1) % state.players.length,
       };
   }
@@ -257,7 +258,14 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
       } else {
         return { actionType: 'GiveHandToWinnerStack' };
       }
-    case 'reset':
+    case 'finalize':
+      const playersStillHavingCards = state.players.filter((player: PlayerData) => {
+        return player.stack.length > 0 || player.hand;
+      });
+
+      if (playersStillHavingCards.length > 1) {
+        return { actionType: 'EndGame' };
+      }
       return { actionType: 'EndTrick' };
   }
 

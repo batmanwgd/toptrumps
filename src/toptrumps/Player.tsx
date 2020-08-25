@@ -28,6 +28,15 @@ const disappear = keyframes`
   }
 `;
 
+const partiallyDisappear = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.5;
+  }
+`;
+
 const Wrapper = styled.div`
   text-transform: uppercase;
   border-radius: 5px;
@@ -57,9 +66,11 @@ const Wrapper = styled.div`
     }
   }
   background: white;
-  & + & {
-    margin-top: 5pt;
+  margin-top: 5pt;
+  &::first {
+    margin-top: 0;
   }
+
   padding: 5pt;
 
   width: 240px;
@@ -101,9 +112,15 @@ const fillerCard = (
   </Invisible>
 );
 
+const Out = styled.div`
+  animation: ${partiallyDisappear} 0.2s linear;
+  opacity: 0.5;
+`;
+
 // const props.card
 export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
-  return (
+  const out = !props.card && props.stackLength === 0;
+  const styled = (
     <Wrapper>
       <div className="title">
         <div className="name">{props.name}</div>
@@ -122,4 +139,5 @@ export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
       {!props.card && !props.ghostCard && fillerCard}
     </Wrapper>
   );
+  return out ? <Out>{styled}</Out> : styled;
 };
