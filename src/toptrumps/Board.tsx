@@ -82,7 +82,6 @@ export const Board: React.FC = () => {
   });
 
   const { setSelectedSkill, setChoices } = useBattleContext();
-  setSelectedSkill(state.selectedSkill || -1);
 
   const foes = state.players.slice(0, -1);
   const me: PlayerData = state.players.slice(-1)[0];
@@ -115,14 +114,24 @@ export const Board: React.FC = () => {
   }, [isStopped]);
 
   useEffect(() => {
+    setSelectedSkill(state.selectedSkill || -1);
+
     const action = getNaturalAction(state);
     dispatch(action);
 
     if (action.actionType === 'StopBeforeShowHand') {
       return;
     }
-    console.log('state', state);
-    const tickDelay = action.actionType === 'RollSkills' ? 2000 : 600;
+    // console.log('state', tick, JSON.stringify(state));
+    const tickDelay = (() => {
+      if (action.actionType === 'RollSkills') {
+        return 2000;
+      }
+      if (action.actionType === 'FindWinner') {
+        return 5000;
+      }
+      return 600;
+    })();
     setTimeout(() => {
       setTick(tick + 1);
     }, tickDelay);

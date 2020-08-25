@@ -45,7 +45,7 @@ const Wrapper = styled.div`
   }
   background: white;
   & + & {
-    margin-top: 3px;
+    margin-top: 5pt;
   }
   padding: 5pt;
 

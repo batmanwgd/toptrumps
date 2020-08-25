@@ -8,7 +8,15 @@ export interface PlayerData {
   nature: Nature;
 }
 
-export type Phase = 'clear' | 'closed' | 'one_open' | 'rolling' | 'selected' | 'selected_stopped' | 'all_open';
+export type Phase =
+  | 'clear'
+  | 'closed'
+  | 'one_open'
+  | 'rolling'
+  | 'selected'
+  | 'selected_stopped'
+  | 'all_open'
+  | 'reset';
 
 export interface BattleState {
   players: PlayerData[];
@@ -20,8 +28,8 @@ export interface BattleState {
 }
 
 export type BattleAction =
+  | { actionType: 'Noop' }
   | { actionType: 'NextPlayer' }
-  | { actionType: 'Reset' }
   | { actionType: 'TakeTopCard'; playerIndex: number }
   | { actionType: 'SetPhase'; phase: Phase }
   | { actionType: 'SetActiveIndex'; index: number }
@@ -30,7 +38,8 @@ export type BattleAction =
   | { actionType: 'Select' }
   | { actionType: 'ShowHand' }
   | { actionType: 'StopBeforeShowHand' }
-  | { actionType: 'FindWinner' };
+  | { actionType: 'FindWinner' }
+  | { actionType: 'GiveHandToWinnerStack' };
 
 export const battleReducer = (state: BattleState, action: BattleAction): BattleState => {
   console.log('State:', state.phase, ' + ', action.actionType);
@@ -158,9 +167,56 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         }
         return 0;
       });
+
+      const winnerIndex = selectedSkillValues.indexOf(Math.max(...selectedSkillValues));
+
       return {
         ...state,
-        winnerIndex: selectedSkillValues.indexOf(Math.max(...selectedSkillValues)),
+        leaderIndex: winnerIndex,
+        activeIndex: (winnerIndex + 1) % state.players.length,
+        winnerIndex,
+      };
+
+    case 'GiveHandToWinnerStack':
+      const state1: BattleState = {
+        ...state,
+        players: state.players.map((player: PlayerData, key) => {
+          if (key === state.activeIndex) {
+            return {
+              ...player,
+              ghostHand: player.hand,
+              hand: undefined,
+            };
+          }
+          return player;
+        }),
+      };
+
+      const ghostHand = state.players[state.activeIndex].hand;
+
+      const state2 = ghostHand
+        ? {
+            ...state,
+            players: state1.players.map((player: PlayerData, key) => {
+              if (key === state.leaderIndex) {
+                return {
+                  ...player,
+                  stack: [...player.stack, ghostHand],
+                };
+              }
+              return player;
+            }),
+          }
+        : state;
+
+      const allGaveTheirHands = state2.players.every((player: PlayerData) => {
+        return player.hand === undefined;
+      });
+
+      return {
+        ...state2,
+        phase: allGaveTheirHands ? 'reset' : 'selected',
+        activeIndex: (state.activeIndex + 1) % state.players.length,
       };
   }
 
@@ -194,8 +250,12 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
         return { actionType: 'StopBeforeShowHand' };
       }
     case 'all_open':
-      return { actionType: 'FindWinner' };
+      if (state.winnerIndex === undefined) {
+        return { actionType: 'FindWinner' };
+      } else {
+        return { actionType: 'GiveHandToWinnerStack' };
+      }
   }
 
-  return { actionType: 'Reset' };
+  return { actionType: 'Noop' };
 };
