@@ -221,6 +221,17 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         phase: allGaveTheirHands ? 'finalize' : 'selected',
         activeIndex: (state.activeIndex + 1) % state.players.length,
       };
+
+    case 'EndGame':
+      return {
+        ...state,
+        players: state.players.map((player: PlayerData) => {
+          return {
+            ...player,
+            ghostHand: undefined,
+          };
+        }),
+      };
   }
 
   return state;
@@ -252,6 +263,7 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
       if (activePlayer.hand && activePlayer.hand.open === false && activePlayer.nature === 'human') {
         return { actionType: 'StopBeforeShowHand' };
       }
+      // break;
     case 'all_open':
       if (state.winnerIndex === undefined) {
         return { actionType: 'FindWinner' };
@@ -264,9 +276,9 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
       });
 
       if (playersStillHavingCards.length > 1) {
-        return { actionType: 'EndGame' };
+        return { actionType: 'EndTrick' };
       }
-      return { actionType: 'EndTrick' };
+      return { actionType: 'EndGame' };
   }
 
   return { actionType: 'Noop' };

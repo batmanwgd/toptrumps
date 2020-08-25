@@ -81,7 +81,7 @@ export const Board: React.FC = () => {
     phase: 'clear',
   });
 
-  const { setSelectedSkill, setChoices } = useBattleContext();
+  const { setSelectedSkill, setChoices, setPhase } = useBattleContext();
 
   const foes = state.players.slice(0, -1);
   const me: PlayerData = state.players.slice(-1)[0];
@@ -116,6 +116,7 @@ export const Board: React.FC = () => {
 
   useEffect(() => {
     setSelectedSkill(state.selectedSkill || -1);
+    setPhase(state.phase);
 
     const action = getNaturalAction(state);
     dispatch(action);

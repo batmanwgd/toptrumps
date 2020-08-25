@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Phase } from './battle';
 
 type Choice = () => void;
 type Choices = Choice[];
@@ -8,6 +9,8 @@ interface BattleContextProps {
   setSelectedSkill: (skillIndex: number) => void;
   choices: Choices;
   setChoices: (choices: Choices) => void;
+  phase: Phase;
+  setPhase: (phase: Phase) => void;
 }
 
 export const BattleContext = React.createContext<BattleContextProps>({
@@ -19,11 +22,16 @@ export const BattleContext = React.createContext<BattleContextProps>({
   setChoices: () => {
     console.error('😕 Context setter called before it is initialized');
   },
+  phase: 'clear',
+  setPhase: () => {
+    console.error('😕 Context setter called before it is initialized');
+  },
 });
 
 export const BattleProvider: React.FC = (props: any) => {
   const [selectedSkill, setSelectedSkill] = useState<number>(-1);
   const [choices, setChoices] = useState<Choices>([]);
+  const [phase, setPhase] = useState<Phase>('clear');
 
   return (
     <BattleContext.Provider
@@ -32,6 +40,8 @@ export const BattleProvider: React.FC = (props: any) => {
         setSelectedSkill,
         choices,
         setChoices,
+        phase,
+        setPhase,
       }}
     >
       {props.children}

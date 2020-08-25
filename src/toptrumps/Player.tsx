@@ -4,6 +4,7 @@ import { Card } from './types';
 import { Card as CardComponent } from './Card';
 import { breakpointSmall } from './constants';
 import { CardInfo } from './CardInfo';
+import { useBattleContext } from './BattleContext';
 
 const shine = keyframes`
   {
@@ -57,6 +58,9 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    span.winner {
+      color: #d22f27;
+    }
     & > .name {
       text-align: left;
     }
@@ -119,13 +123,21 @@ const Out = styled.div`
 
 // const props.card
 export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
+  const { phase } = useBattleContext();
+  const isFinalWinner = phase === 'finalize' && props.stackLength > 0;
+
+  // console.log({ isFinalWinner, phase, sl: props.stackLength });
   const out = !props.card && props.stackLength === 0;
   const styled = (
     <Wrapper>
       <div className="title">
-        <div className="name">{props.name}</div>
+        <div className="name">
+          {props.name}
+          {isFinalWinner && <span className="winner">{' '}Winner 🎉</span>}
+        </div>
         <div className="stack">{props.stackLength}</div>
       </div>
+
       {props.card && (
         <div className={`${props.isWinner ? 'winner' : ''}`}>
           <CardComponent card={props.card} />
