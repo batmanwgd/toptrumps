@@ -90,6 +90,7 @@ export const Board: React.FC = () => {
     return {
       name: data.name,
       card: data.hand,
+      ghostCard: data.ghostHand,
       stackLength: data.stack.length,
       actionRequired: false,
       isWinner: isWinner,

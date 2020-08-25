@@ -5,6 +5,7 @@ export interface PlayerData {
   name: string;
   stack: OpenCard[];
   hand?: OpenCard;
+  ghostHand?: OpenCard;
   nature: Nature;
 }
 
@@ -39,7 +40,8 @@ export type BattleAction =
   | { actionType: 'ShowHand' }
   | { actionType: 'StopBeforeShowHand' }
   | { actionType: 'FindWinner' }
-  | { actionType: 'GiveHandToWinnerStack' };
+  | { actionType: 'GiveHandToWinnerStack' }
+  | { actionType: 'EndTrick' };
 
 export const battleReducer = (state: BattleState, action: BattleAction): BattleState => {
   console.log('State:', state.phase, ' + ', action.actionType);
@@ -255,6 +257,8 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
       } else {
         return { actionType: 'GiveHandToWinnerStack' };
       }
+    case 'reset':
+      return { actionType: 'EndTrick' };
   }
 
   return { actionType: 'Noop' };

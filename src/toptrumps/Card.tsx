@@ -16,9 +16,8 @@ const appear = keyframes`
 `;
 
 const Wrapper = styled.div`
-  animation: ${appear} 0.2s linear;
-
   .back {
+    animation: ${appear} 0.2s linear;
     border: 3px solid #61b2e4;
     height: 100%;
     display: flex;

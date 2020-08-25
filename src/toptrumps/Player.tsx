@@ -19,11 +19,24 @@ const shine = keyframes`
   }
 `;
 
+const disappear = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
 const Wrapper = styled.div`
   text-transform: uppercase;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
+  .ghost {
+    animation: ${disappear} 0.2s linear;
+    opacity: 0;
+  }
   .winner .card .selected {
     animation: ${shine} 1s linear;
     animation-iteration-count: infinite;
@@ -59,12 +72,13 @@ const Wrapper = styled.div`
 interface PlayerProps {
   name: string;
   card?: Card;
+  ghostCard?: Card;
   stackLength: number;
   actionRequired: boolean;
   isWinner: boolean;
 }
 
-const ghostCardProps: Card = {
+const fillerCardProps: Card = {
   name: '???',
   open: true,
   roll: false,
@@ -81,9 +95,9 @@ const Invisible = styled.div`
   visibility: hidden;
 `;
 
-const ghostCard = (
+const fillerCard = (
   <Invisible>
-    <CardInfo card={ghostCardProps} />
+    <CardInfo card={fillerCardProps} />
   </Invisible>
 );
 
@@ -100,7 +114,12 @@ export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
           <CardComponent card={props.card} />
         </div>
       )}
-      {!props.card && ghostCard}
+      {props.ghostCard && (
+        <div className="ghost">
+          <CardComponent card={props.ghostCard} />
+        </div>
+      )}
+      {!props.card && !props.ghostCard && fillerCard}
     </Wrapper>
   );
 };
