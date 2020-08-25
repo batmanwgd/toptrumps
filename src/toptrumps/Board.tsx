@@ -1,21 +1,11 @@
 import React, { useReducer, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Player } from './Player';
-import { OpenCard } from './types';
-import spaceshipData from './spaceships.json';
 import { breakpointSmall } from './constants';
-import { BattleState, BattleAction, battleReducer, PlayerData, getNaturalAction } from './battle';
+import { BattleAction, battleReducer, getNaturalAction } from './battle';
+import { BattleState, PlayerData } from './types';
 import { useBattleContext } from './BattleContext';
-
-interface Spaceship {
-  name: string;
-  hyperdriveRating: number;
-  length: number;
-  costInCredits: number;
-  cargoCapacity: number;
-}
-
-const spaceships = spaceshipData as Spaceship[];
+import { getInitialBattleState } from './loader';
 
 const Wrapper = styled.div`
   font-size: 1em;
@@ -51,35 +41,10 @@ const Wrapper = styled.div`
 `;
 
 export const Board: React.FC = () => {
-  const allCards: OpenCard[] = spaceships
-    .filter((s: Spaceship) => s.cargoCapacity && s.costInCredits && s.hyperdriveRating && s.length)
-    .sort(() => Math.random() - 0.5)
-    .map((spaceship: Spaceship) => {
-      return {
-        type: 'open',
-        name: spaceship.name,
-        skills: {
-          hyperdriveRating: spaceship.hyperdriveRating,
-          length: spaceship.length,
-          costInCredits: spaceship.costInCredits,
-          cargoCapacity: spaceship.cargoCapacity,
-        },
-        open: false,
-        roll: false,
-      };
-    });
-
-  const [c1, c2, c3] = allCards;
-  const [state, dispatch] = useReducer<React.Reducer<BattleState, BattleAction>>(battleReducer, {
-    players: [
-      { name: 'gitanas nauseda', stack: [c1], nature: 'bot' },
-      { name: 'celofanas', stack: [c2], nature: 'bot' },
-      { name: 'luke 10x', stack: [c3], nature: 'human' },
-    ],
-    leaderIndex: 0,
-    activeIndex: 0,
-    phase: 'clear',
-  });
+  const [state, dispatch] = useReducer<React.Reducer<BattleState, BattleAction>>(
+    battleReducer,
+    getInitialBattleState(),
+  );
 
   const { setSelectedSkill, setChoices, setPhase } = useBattleContext();
 
@@ -143,7 +108,7 @@ export const Board: React.FC = () => {
     <Wrapper>
       <div className="content">
         <div className="players them">
-          {foes.map((p: PlayerData, key) => {
+          {foes.map((p: PlayerData, key: number) => {
             const isWinner = key === state.winnerIndex;
             return <Player key={key} {...playerDataToProps(p, isWinner)} />;
           })}

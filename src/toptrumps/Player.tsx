@@ -121,11 +121,19 @@ const Out = styled.div`
   opacity: 0.5;
 `;
 
+const Winner = styled.div`
+  cursor: pointer;
+`;
+
 // const props.card
 export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
   const { phase } = useBattleContext();
   const isFinalWinner = phase === 'finalize' && props.stackLength > 0;
 
+  const handlePlayerClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    alert('hello');
+  };
   // console.log({ isFinalWinner, phase, sl: props.stackLength });
   const out = !props.card && props.stackLength === 0;
   const styled = (
@@ -133,7 +141,7 @@ export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
       <div className="title">
         <div className="name">
           {props.name}
-          {isFinalWinner && <span className="winner">{' '}Winner 🎉</span>}
+          {isFinalWinner && <span className="winner"> Winner 🎉</span>}
         </div>
         <div className="stack">{props.stackLength}</div>
       </div>
@@ -151,5 +159,15 @@ export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
       {!props.card && !props.ghostCard && fillerCard}
     </Wrapper>
   );
-  return out ? <Out>{styled}</Out> : styled;
+  if (out) {
+    return <Out>{styled}</Out>;
+  }
+  if (isFinalWinner) {
+    return (
+      <Winner>
+        <div onClick={handlePlayerClick}>{styled}</div>
+      </Winner>
+    );
+  }
+  return styled;
 };

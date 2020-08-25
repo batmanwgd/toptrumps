@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Phase } from './battle';
+import { Phase } from './types';
 
 type Choice = () => void;
 type Choices = Choice[];

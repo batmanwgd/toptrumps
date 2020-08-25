@@ -1,32 +1,4 @@
-import { OpenCard } from './types';
-
-type Nature = 'human' | 'bot';
-export interface PlayerData {
-  name: string;
-  stack: OpenCard[];
-  hand?: OpenCard;
-  ghostHand?: OpenCard;
-  nature: Nature;
-}
-
-export type Phase =
-  | 'clear'
-  | 'closed'
-  | 'one_open'
-  | 'rolling'
-  | 'selected'
-  | 'selected_stopped'
-  | 'all_open'
-  | 'finalize';
-
-export interface BattleState {
-  players: PlayerData[];
-  leaderIndex: number;
-  activeIndex: number;
-  phase: Phase;
-  selectedSkill?: number;
-  winnerIndex?: number;
-}
+import { OpenCard, BattleState, Phase, PlayerData } from './types';
 
 export type BattleAction =
   | { actionType: 'Noop' }
