@@ -125,7 +125,6 @@ const Winner = styled.div`
   cursor: pointer;
 `;
 
-// const props.card
 export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
   const { phase, choices } = useBattleContext();
   const isFinalWinner = phase === 'finalize' && props.stackLength > 0;
@@ -134,9 +133,7 @@ export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
     e.stopPropagation();
     const choice = choices[0];
     choice();
-    // alert('hello');
   };
-  // console.log({ isFinalWinner, phase, sl: props.stackLength });
   const out = !props.card && props.stackLength === 0;
   const styled = (
     <Wrapper>

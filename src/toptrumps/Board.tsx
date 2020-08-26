@@ -5,7 +5,18 @@ import { breakpointSmall } from './constants';
 import { BattleAction, battleReducer, getNaturalAction } from './battle';
 import { BattleState, PlayerData } from './types';
 import { useBattleContext } from './BattleContext';
-import { getInitialBattleState } from './loader';
+import { loadRandomCards } from './loader';
+
+const initialBattleState: BattleState = {
+  players: [
+    { name: 'gitanas nauseda', stack: [], nature: 'bot' },
+    { name: 'celofanas', stack: [], nature: 'bot' },
+    { name: 'luke 10x', stack: [], nature: 'human' },
+  ],
+  leaderIndex: 0,
+  activeIndex: 0,
+  phase: 'clear',
+};
 
 const Wrapper = styled.div`
   font-size: 1em;
@@ -41,10 +52,7 @@ const Wrapper = styled.div`
 `;
 
 export const Board: React.FC = () => {
-  const [state, dispatch] = useReducer<React.Reducer<BattleState, BattleAction>>(
-    battleReducer,
-    getInitialBattleState(),
-  );
+  const [state, dispatch] = useReducer<React.Reducer<BattleState, BattleAction>>(battleReducer, initialBattleState);
 
   const { setSelectedSkill, setChoices, setPhase } = useBattleContext();
 
@@ -61,12 +69,21 @@ export const Board: React.FC = () => {
       isWinner: isWinner,
     };
   };
-  // const isFinalWinner = phase === 'finalize' && state.winnerIndex;
 
   const [tick, setTick] = useState<number>(0);
 
   useEffect(() => {
-    if (state.phase === 'selected_stopped') {
+    if (state.phase === 'loading') {
+      // TODO move this to apollo hook later
+      setTimeout(() => {
+        const [c1, c2, c3] = loadRandomCards();
+        dispatch({
+          actionType: 'Loaded',
+          payload: [[c1], [c2], [c3]],
+        });
+        setTick(tick + 1);
+      }, 5000);
+    } else if (state.phase === 'selected_stopped') {
       setChoices([
         () => {
           dispatch({ actionType: 'ShowHand' });
@@ -100,7 +117,10 @@ export const Board: React.FC = () => {
       return;
     }
 
-    // console.log('state', tick, JSON.stringify(state));
+    if (action.actionType === 'StartLoading') {
+      return;
+    }
+
     const tickDelay = (() => {
       if (action.actionType === 'RollSkills') {
         return 2000;

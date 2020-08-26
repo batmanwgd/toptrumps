@@ -1,5 +1,5 @@
 import spaceshipData from './spaceships.json';
-import { OpenCard, BattleState } from './types';
+import { OpenCard } from './types';
 
 interface Spaceship {
   name: string;
@@ -11,7 +11,7 @@ interface Spaceship {
 
 const spaceships = spaceshipData as Spaceship[];
 
-export const getInitialBattleState = (): BattleState => {
+export const loadRandomCards = (): OpenCard[] => {
   const allCards: OpenCard[] = spaceships
     .filter((s: Spaceship) => s.cargoCapacity && s.costInCredits && s.hyperdriveRating && s.length)
     .sort(() => Math.random() - 0.5)
@@ -29,16 +29,6 @@ export const getInitialBattleState = (): BattleState => {
         roll: false,
       };
     });
-  const [c1, c2, c3] = allCards;
+  return allCards;
 
-  return {
-    players: [
-      { name: 'gitanas nauseda', stack: [c1], nature: 'bot' },
-      { name: 'celofanas', stack: [c2], nature: 'bot' },
-      { name: 'luke 10x', stack: [c3], nature: 'human' },
-    ],
-    leaderIndex: 0,
-    activeIndex: 0,
-    phase: 'clear',
-  };
 };

@@ -35,6 +35,7 @@ export interface PlayerData {
 
 export type Phase =
   | 'clear'
+  | 'loading'
   | 'closed'
   | 'one_open'
   | 'rolling'

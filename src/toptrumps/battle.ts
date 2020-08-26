@@ -2,6 +2,11 @@ import { OpenCard, BattleState, Phase, PlayerData } from './types';
 
 export type BattleAction =
   | { actionType: 'Noop' }
+  | { actionType: 'StartLoading' }
+  | {
+      actionType: 'Loaded';
+      payload: Array<OpenCard[]>;
+    }
   | { actionType: 'NextPlayer' }
   | { actionType: 'TakeTopCard'; playerIndex: number }
   | { actionType: 'SetPhase'; phase: Phase }
@@ -34,6 +39,24 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
           return player;
         }),
         activeIndex: (state.activeIndex + 1) % state.players.length,
+      };
+
+    case 'StartLoading':
+      return {
+        ...state,
+        phase: 'loading',
+      };
+
+    case 'Loaded':
+      return {
+        ...state,
+        players: state.players.map((player: PlayerData, key) => {
+          return {
+            ...player,
+            stack: action.payload[key],
+          };
+        }),
+        phase: 'clear',
       };
 
     case 'SetPhase':
@@ -232,6 +255,12 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
   const activePlayer = state.players[state.activeIndex];
   switch (state.phase) {
     case 'clear':
+      const allHaveNothing = state.players.every((player: PlayerData) => {
+        return !player.hand && player.stack.length === 0;
+      });
+      if (allHaveNothing) {
+        return { actionType: 'StartLoading' };
+      }
       if (activePlayer.hand === undefined && activePlayer.stack.length > 0) {
         return { actionType: 'TakeTopCard', playerIndex: 123 };
       }
@@ -240,7 +269,7 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
       });
       if (allAliveHaveHands) {
         return { actionType: 'SetPhase', phase: 'closed' };
-      } else throw new Error('Error wile dealing in clear');
+      } else throw new Error('Error while dealing in clear');
     case 'closed':
       return { actionType: 'ShowLeaderHand' };
     case 'one_open':
@@ -254,7 +283,7 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
       if (activePlayer.hand && activePlayer.hand.open === false && activePlayer.nature === 'human') {
         return { actionType: 'StopBeforeShowHand' };
       }
-      // break;
+    // break;
     case 'all_open':
       if (state.winnerIndex === undefined) {
         return { actionType: 'FindWinner' };
