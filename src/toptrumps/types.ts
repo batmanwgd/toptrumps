@@ -41,7 +41,8 @@ export type Phase =
   | 'selected'
   | 'selected_stopped'
   | 'all_open'
-  | 'finalize';
+  | 'finalize'
+  | 'finalize_stopped';
 
 export interface BattleState {
   players: PlayerData[];

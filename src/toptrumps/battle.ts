@@ -14,6 +14,7 @@ export type BattleAction =
   | { actionType: 'FindWinner' }
   | { actionType: 'GiveHandToWinnerStack' }
   | { actionType: 'EndTrick' }
+  | { actionType: 'StopBeforeEndGame' }
   | { actionType: 'EndGame' };
 
 export const battleReducer = (state: BattleState, action: BattleAction): BattleState => {
@@ -194,7 +195,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         activeIndex: (state.activeIndex + 1) % state.players.length,
       };
 
-    case 'EndGame':
+    case 'StopBeforeEndGame':
       return {
         ...state,
         players: state.players.map((player: PlayerData) => {
@@ -203,6 +204,24 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
             ghostHand: undefined,
           };
         }),
+        phase: 'finalize_stopped',
+      };
+
+    case 'EndGame':
+      return {
+        ...state,
+        players: state.players.map((player: PlayerData) => {
+          return {
+            ...player,
+            ghostHand: undefined,
+            hand: undefined,
+            stack: [],
+          };
+        }),
+        winnerIndex: undefined,
+        activeIndex: state.leaderIndex,
+        phase: 'clear',
+        selectedSkill: undefined,
       };
   }
 
@@ -250,7 +269,7 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
       if (playersStillHavingCards.length > 1) {
         return { actionType: 'EndTrick' };
       }
-      return { actionType: 'EndGame' };
+      return { actionType: 'StopBeforeEndGame' };
   }
 
   return { actionType: 'Noop' };

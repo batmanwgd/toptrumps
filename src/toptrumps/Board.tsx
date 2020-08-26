@@ -61,23 +61,29 @@ export const Board: React.FC = () => {
       isWinner: isWinner,
     };
   };
+  // const isFinalWinner = phase === 'finalize' && state.winnerIndex;
 
   const [tick, setTick] = useState<number>(0);
-
-  const isStopped = state.phase === 'selected_stopped';
 
   useEffect(() => {
     if (state.phase === 'selected_stopped') {
       setChoices([
         () => {
           dispatch({ actionType: 'ShowHand' });
+          setTick(tick + 1);
         },
       ]);
-      setTick(tick + 1);
+    } else if (state.phase === 'finalize_stopped') {
+      setChoices([
+        () => {
+          dispatch({ actionType: 'EndGame' });
+          setTick(tick + 1);
+        },
+      ]);
     } else {
       setChoices([]);
     }
-  }, [isStopped]);
+  }, [state.phase]);
 
   useEffect(() => {
     setSelectedSkill(state.selectedSkill || -1);
@@ -89,6 +95,11 @@ export const Board: React.FC = () => {
     if (action.actionType === 'StopBeforeShowHand') {
       return;
     }
+
+    if (action.actionType === 'StopBeforeEndGame') {
+      return;
+    }
+
     // console.log('state', tick, JSON.stringify(state));
     const tickDelay = (() => {
       if (action.actionType === 'RollSkills') {
