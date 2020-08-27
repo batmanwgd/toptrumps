@@ -1,9 +1,9 @@
-import React, { useReducer, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Player } from './Player';
 import { breakpointSmall } from './constants';
-import { BattleAction, battleReducer, getNaturalAction } from './battle';
-import { BattleState, PlayerData } from './types';
+import { getNaturalAction } from './battle';
+import { PlayerData } from './types';
 import { useBattleContext } from './BattleContext';
 import { loadRandomCards } from './loader';
 import { PlayerProvider } from './PlayerContext';

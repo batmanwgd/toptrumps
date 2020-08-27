@@ -19,6 +19,15 @@ export type BattleAction =
   | { actionType: 'StopBeforeEndGame' }
   | { actionType: 'EndGame' };
 
+const nextActiveIndex = (state: BattleState): number => {
+  const nextIndex = (state.activeIndex + 1) % state.players.length;
+  const nextPlayer = state.players[nextIndex];
+  if (!nextPlayer.hand && nextPlayer.stack.length === 0) {
+    return (state.activeIndex + 2) % state.players.length;
+  }
+  return nextIndex;
+}
+
 export const battleReducer = (state: BattleState, action: BattleAction): BattleState => {
   console.log('State:', state.phase, ' + ', action.actionType);
   switch (action.actionType) {
@@ -38,7 +47,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
           }
           return player;
         }),
-        activeIndex: allAliveHaveHands ? state.activeIndex : (state.activeIndex + 1) % state.players.length,
+        activeIndex: allAliveHaveHands ? state.activeIndex : nextActiveIndex(state),
         phase: allAliveHaveHands ? 'closed' : 'clear',
       };
 
@@ -109,7 +118,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
           return player;
         }),
         phase: 'selected',
-        activeIndex: (state.activeIndex + 1) % state.players.length,
+        activeIndex: nextActiveIndex(state),
         selectedSkill: 1,
       };
 
@@ -129,7 +138,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         }),
         phase: 'selected',
 
-        activeIndex: (state.activeIndex + 1) % state.players.length,
+        activeIndex: nextActiveIndex(state),
       };
       if (
         stateAfterShowHand.players.every((player: PlayerData) => {
@@ -217,7 +226,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
       return {
         ...state2,
         phase: allGaveTheirHands ? 'finalize' : 'all_open',
-        activeIndex: (state.activeIndex + 1) % state.players.length,
+        activeIndex: nextActiveIndex(state),
       };
 
     case 'StopBeforeEndGame':
