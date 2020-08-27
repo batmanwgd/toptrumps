@@ -39,6 +39,7 @@ export type Phase =
   | 'closed'
   | 'one_open'
   | 'rolling'
+  | 'rolling_stopped'
   | 'selected'
   | 'selected_stopped'
   | 'all_open'

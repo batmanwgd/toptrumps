@@ -11,8 +11,8 @@ const initialBattleState: BattleState = {
     { name: 'celofanas', stack: [], nature: 'bot' },
     { name: 'luke 10x', stack: [], nature: 'human' },
   ],
-  leaderIndex: 0,
-  activeIndex: 0,
+  leaderIndex: 2,
+  activeIndex: 2,
   phase: 'clear',
 };
 

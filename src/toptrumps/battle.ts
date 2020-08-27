@@ -10,7 +10,8 @@ export type BattleAction =
   | { actionType: 'TakeTopCard' }
   | { actionType: 'ShowLeaderHand' }
   | { actionType: 'RollSkills' }
-  | { actionType: 'Select' }
+  | { actionType: 'LetUserSelect' }
+  | { actionType: 'Select'; skillIndex: number }
   | { actionType: 'ShowHand' }
   | { actionType: 'StopBeforeShowHand' }
   | { actionType: 'FindWinner' }
@@ -103,6 +104,12 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         phase: 'rolling',
       };
 
+    case 'LetUserSelect':
+      return {
+        ...state,
+        phase: 'rolling_stopped',
+      };
+
     case 'Select':
       return {
         ...state,
@@ -119,7 +126,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         }),
         phase: 'selected',
         activeIndex: nextActiveIndex(state),
-        selectedSkill: 1,
+        selectedSkill: action.skillIndex,
       };
 
     case 'ShowHand':
@@ -299,12 +306,12 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
     case 'one_open':
       return { actionType: 'RollSkills' };
     case 'rolling':
-      return { actionType: 'Select' };
-    case 'selected':
-      if ((!activePlayer.hand || activePlayer.hand.open === false) && activePlayer.nature === 'bot') {
-        return { actionType: 'ShowHand' };
+      if (activePlayer.nature === 'human') {
+        return { actionType: 'LetUserSelect' };
       }
-      if (activePlayer.hand && activePlayer.hand.open === false && activePlayer.nature === 'human') {
+      return { actionType: 'Select', skillIndex: 1 };
+    case 'selected':
+      if (activePlayer.nature === 'human') {
         return { actionType: 'StopBeforeShowHand' };
       }
       return { actionType: 'ShowHand' };

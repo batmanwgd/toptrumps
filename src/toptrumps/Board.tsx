@@ -84,6 +84,33 @@ export const Board: React.FC = () => {
           }, 600);
         },
       ]);
+    } else if (state.phase === 'rolling_stopped') {
+      setChoices([
+        () => {
+          dispatch({ actionType: 'Select', skillIndex: 0 });
+          setTimeout(() => {
+            setTick(tick + 1);
+          }, 600);
+        },
+        () => {
+          dispatch({ actionType: 'Select', skillIndex: 1 });
+          setTimeout(() => {
+            setTick(tick + 1);
+          }, 600);
+        },
+        () => {
+          dispatch({ actionType: 'Select', skillIndex: 2 });
+          setTimeout(() => {
+            setTick(tick + 1);
+          }, 600);
+        },
+        () => {
+          dispatch({ actionType: 'Select', skillIndex: 3 });
+          setTimeout(() => {
+            setTick(tick + 1);
+          }, 600);
+        },
+      ]);
     } else if (state.phase === 'finalize_stopped') {
       setChoices([
         () => {
@@ -100,15 +127,19 @@ export const Board: React.FC = () => {
     const action = getNaturalAction(state);
     dispatch(action);
 
+    if (action.actionType === 'StartLoading') {
+      return;
+    }
+
+    if (action.actionType === 'LetUserSelect') {
+      return;
+    }
+
     if (action.actionType === 'StopBeforeShowHand') {
       return;
     }
 
     if (action.actionType === 'StopBeforeEndGame') {
-      return;
-    }
-
-    if (action.actionType === 'StartLoading') {
       return;
     }
 

@@ -31,6 +31,9 @@ const Wrapper = styled.div`
 
     list-style: none;
     li.abilityLine {
+      :hover {
+        cursor: pointer;
+      }
       padding: 10pt;
       display: flex;
       &.flash {
@@ -75,7 +78,8 @@ export const CardInfo: React.FC<CardInfoProps> = (props: CardInfoProps) => {
   const [flash, setFlash] = useState<number>(-1);
 
   const {
-    state: { selectedSkill },
+    state: { selectedSkill, phase },
+    choices,
   } = useBattleContext();
 
   const rolling = card.rolling && selectedSkill === undefined;
@@ -89,23 +93,54 @@ export const CardInfo: React.FC<CardInfoProps> = (props: CardInfoProps) => {
     }
   }, [flash, rolling, selectedSkill]);
 
+  const selectable = phase === 'rolling_stopped';
+
+  const handlers = choices.map((choice: () => void) => {
+    return (event: React.MouseEvent<HTMLElement>) => {
+      event?.preventDefault();
+      if (selectable) {
+        choice();
+      }
+    };
+  });
+
   return (
     <Wrapper className="card">
       <div className="name">{card.name}</div>
       <ul className="scores">
-        <li className={`abilityLine ${flash === 0 ? 'flash' : ''} ${selectedSkill === 0 ? 'selected' : ''}`}>
+      <li
+          className={`abilityLine ${selectable ? 'selectable' : ''} ${flash === 0 ? 'flash' : ''} ${
+            selectedSkill === 0 ? 'selected' : ''
+          }`}
+          onClick={handlers[0]}
+        >
           <span className="ability">Cost:</span>
           <span className="value">{card.skills.costInCredits}</span>
         </li>
-        <li className={`abilityLine ${flash === 1 ? 'flash' : ''} ${selectedSkill === 1 ? 'selected' : ''}`}>
+        <li
+          className={`abilityLine ${selectable ? 'selectable' : ''} ${flash === 1 ? 'flash' : ''} ${
+            selectedSkill === 1 ? 'selected' : ''
+          }`}
+          onClick={handlers[1]}
+        >
           <span className="ability">H-Rating:</span>
           <span className="value">{card.skills.hyperdriveRating}</span>
         </li>
-        <li className={`abilityLine ${flash === 2 ? 'flash' : ''} ${selectedSkill === 2 ? 'selected' : ''}`}>
+        <li
+          className={`abilityLine ${selectable ? 'selectable' : ''} ${flash === 2 ? 'flash' : ''} ${
+            selectedSkill === 2 ? 'selected' : ''
+          }`}
+          onClick={handlers[2]}
+        >
           <span className="ability">Length:</span>
           <span className="value">{card.skills.length}</span>
         </li>
-        <li className={`abilityLine ${flash === 3 ? 'flash' : ''} ${selectedSkill === 3 ? 'selected' : ''}`}>
+        <li
+          className={`abilityLine ${selectable ? 'selectable' : ''} ${flash === 3 ? 'flash' : ''} ${
+            selectedSkill === 3 ? 'selected' : ''
+          }`}
+          onClick={handlers[3]}
+        >
           <span className="ability">Cargo:</span>
           <span className="value">{card.skills.cargoCapacity}</span>
         </li>
