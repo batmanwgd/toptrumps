@@ -116,8 +116,12 @@ export interface PlayerProps {
 }
 
 export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
-  const { phase, choices } = useBattleContext();
-  const isFinalWinner = phase === 'finalize' && props.stackLength > 0;
+  const {
+    state: { phase },
+    choices,
+  } = useBattleContext();
+
+  const isFinalWinner = phase === 'finalize_stopped' && props.stackLength > 0;
 
   const handlePlayerClick = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();

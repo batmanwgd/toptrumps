@@ -1,47 +1,50 @@
-import React, { useState } from 'react';
-import { Phase } from './types';
+import React, { useState, useReducer } from 'react';
+import { BattleState } from './types';
+import { BattleAction, battleReducer } from './battle';
 
 type Choice = () => void;
 type Choices = Choice[];
 
+const initialBattleState: BattleState = {
+  players: [
+    { name: 'gitanas nauseda', stack: [], nature: 'bot' },
+    { name: 'celofanas', stack: [], nature: 'bot' },
+    { name: 'luke 10x', stack: [], nature: 'human' },
+  ],
+  leaderIndex: 0,
+  activeIndex: 0,
+  phase: 'clear',
+};
+
 interface BattleContextProps {
-  selectedSkill: number;
-  setSelectedSkill: (skillIndex: number) => void;
   choices: Choices;
   setChoices: (choices: Choices) => void;
-  phase: Phase;
-  setPhase: (phase: Phase) => void;
+  state: BattleState;
+  dispatch: (action: BattleAction) => void;
 }
 
 export const BattleContext = React.createContext<BattleContextProps>({
-  selectedSkill: -10,
-  setSelectedSkill: () => {
-    console.error('😕 Context setter called before it is initialized');
-  },
   choices: [],
   setChoices: () => {
     console.error('😕 Context setter called before it is initialized');
   },
-  phase: 'clear',
-  setPhase: () => {
-    console.error('😕 Context setter called before it is initialized');
+  state: initialBattleState,
+  dispatch: () => {
+    console.error('😕 Context dispatch called before it is initialized');
   },
 });
 
 export const BattleProvider: React.FC = (props: any) => {
-  const [selectedSkill, setSelectedSkill] = useState<number>(-1);
   const [choices, setChoices] = useState<Choices>([]);
-  const [phase, setPhase] = useState<Phase>('clear');
+  const [state, dispatch] = useReducer<React.Reducer<BattleState, BattleAction>>(battleReducer, initialBattleState);
 
   return (
     <BattleContext.Provider
       value={{
-        selectedSkill,
-        setSelectedSkill,
         choices,
         setChoices,
-        phase,
-        setPhase,
+        state,
+        dispatch,
       }}
     >
       {props.children}

@@ -55,6 +55,7 @@ export const Card: React.FC<CardProps> = (props: CardProps) => {
   const openCard = card as OpenCard;
 
   const { choices } = useBattleContext();
+
   const { isHuman } = usePlayerContext();
 
   const active = choices.length === 1 && isHuman;

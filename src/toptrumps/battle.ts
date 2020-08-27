@@ -165,12 +165,17 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
       });
 
       const winnerIndex = selectedSkillValues.indexOf(Math.max(...selectedSkillValues));
+      const playerHavingSomething = state.players.filter((player: PlayerData) => {
+        return player.hand || player.stack.length > 0;
+      });
 
+      const isFinal = playerHavingSomething.length < 2;
       return {
         ...state,
         leaderIndex: winnerIndex,
         activeIndex: (winnerIndex + 1) % state.players.length,
         winnerIndex,
+        finalWinnerIndex: isFinal ? winnerIndex : undefined,
       };
 
     case 'GiveHandToWinnerStack':

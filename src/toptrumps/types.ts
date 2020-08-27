@@ -52,4 +52,5 @@ export interface BattleState {
   phase: Phase;
   selectedSkill?: number;
   winnerIndex?: number;
+  finalWinnerIndex?: number;
 }

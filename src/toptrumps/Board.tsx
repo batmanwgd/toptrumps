@@ -8,15 +8,15 @@ import { useBattleContext } from './BattleContext';
 import { loadRandomCards } from './loader';
 import { PlayerProvider } from './PlayerContext';
 
-const initialBattleState: BattleState = {
-  players: [
-    { name: 'gitanas nauseda', stack: [], nature: 'bot' },
-    { name: 'celofanas', stack: [], nature: 'bot' },
-    { name: 'luke 10x', stack: [], nature: 'human' },
-  ],
-  leaderIndex: 0,
-  activeIndex: 0,
-  phase: 'clear',
+const playerDataToProps = (data: PlayerData, isWinner: boolean) => {
+  return {
+    name: data.name,
+    card: data.hand,
+    ghostCard: data.ghostHand,
+    stackLength: data.stack.length,
+    isHuman: data.nature === 'human',
+    isWinner: isWinner,
+  };
 };
 
 const Wrapper = styled.div`
@@ -53,34 +53,25 @@ const Wrapper = styled.div`
 `;
 
 export const Board: React.FC = () => {
-  const [state, dispatch] = useReducer<React.Reducer<BattleState, BattleAction>>(battleReducer, initialBattleState);
-
-  const { setSelectedSkill, setChoices, setPhase } = useBattleContext();
+  const { state, dispatch, setChoices } = useBattleContext();
 
   const foes = state.players.slice(0, -1);
   const me: PlayerData = state.players.slice(-1)[0];
 
-  const playerDataToProps = (data: PlayerData, isWinner: boolean) => {
-    return {
-      name: data.name,
-      card: data.hand,
-      ghostCard: data.ghostHand,
-      stackLength: data.stack.length,
-      isHuman: data.nature === 'human',
-      isWinner: isWinner,
-    };
-  };
-
   const [tick, setTick] = useState<number>(0);
-
   useEffect(() => {
     if (state.phase === 'loading') {
       // TODO move this to apollo hook later
       setTimeout(() => {
-        const [c1, c2, c3] = loadRandomCards();
+        const [c1, c2, c3, c4, c5, c6] = loadRandomCards();
         dispatch({
           actionType: 'Loaded',
           payload: [[c1], [c2], [c3]],
+          // payload: [
+          //   [c1, c4],
+          //   [c2, c5],
+          //   [c3, c6],
+          // ],
         });
         setTick(tick + 1);
       }, 500);
@@ -106,9 +97,6 @@ export const Board: React.FC = () => {
   }, [state.phase]);
 
   useEffect(() => {
-    setSelectedSkill(state.selectedSkill || -1);
-    setPhase(state.phase);
-
     const action = getNaturalAction(state);
     dispatch(action);
 
