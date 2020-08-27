@@ -247,6 +247,12 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         players: state.players.map((player: PlayerData) => {
           return {
             ...player,
+            stack: player.stack.map((card: OpenCard) => {
+              return {
+                ...card,
+                open: false,
+              };
+            }),
             ghostHand: undefined,
             hand: undefined,
           };
