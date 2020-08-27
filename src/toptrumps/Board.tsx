@@ -87,7 +87,9 @@ export const Board: React.FC = () => {
       setChoices([
         () => {
           dispatch({ actionType: 'ShowHand' });
-          setTick(tick + 1);
+          setTimeout(() => {
+            setTick(tick + 1);
+          }, 600);
         },
       ]);
     } else if (state.phase === 'finalize_stopped') {
@@ -126,7 +128,7 @@ export const Board: React.FC = () => {
         return 2000;
       }
       if (action.actionType === 'FindWinner') {
-        return 5000;
+        return 4000;
       }
       return 600;
     })();

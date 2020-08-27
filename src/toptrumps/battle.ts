@@ -124,7 +124,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
           if (key === state.activeIndex) {
             const hand = player.hand as OpenCard;
             if (!hand) {
-              throw new Error('Leader has no hand so cannot show it');
+              throw new Error('Active player has no hand so cannot show it');
             }
             const openHand: OpenCard = { ...hand, open: true };
             return { ...player, hand: openHand };
@@ -214,7 +214,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
 
       return {
         ...state2,
-        phase: allGaveTheirHands ? 'finalize' : 'selected',
+        phase: allGaveTheirHands ? 'finalize' : 'all_open',
         activeIndex: (state.activeIndex + 1) % state.players.length,
       };
 
@@ -277,13 +277,14 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
     case 'rolling':
       return { actionType: 'Select' };
     case 'selected':
-      if (activePlayer.hand && activePlayer.hand.open === false && activePlayer.nature === 'bot') {
+      if ((!activePlayer.hand || activePlayer.hand.open === false) && activePlayer.nature === 'bot') {
         return { actionType: 'ShowHand' };
       }
       if (activePlayer.hand && activePlayer.hand.open === false && activePlayer.nature === 'human') {
         return { actionType: 'StopBeforeShowHand' };
       }
-    // break;
+      return { actionType: 'ShowHand' };
+
     case 'all_open':
       if (state.winnerIndex === undefined) {
         return { actionType: 'FindWinner' };
