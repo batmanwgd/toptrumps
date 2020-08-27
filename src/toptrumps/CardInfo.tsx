@@ -6,38 +6,33 @@ import { breakpointSmall } from './constants';
 import { useBattleContext } from './BattleContext';
 
 const Wrapper = styled.div`
+  height: 100%;
   margin: 1px;
-  border: 3px solid #f1b31c;
+
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
-  height: 100%;
   justify-content: space-around;
+
+  background: #ffeb3b;
+  border: 3px solid #f1b31c;
+  border-radius: 5pt;
+  box-sizing: border-box;
 
   .name {
     font-size: 0.75em;
-    padding-top: 10pt;
   }
   ul.scores {
+    padding-left: 0;
+    margin: 0;
+
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 
-    padding-left: 0;
-    margin: 0;
     list-style: none;
-
-    @media (max-width: ${breakpointSmall}) {
-      font-size: 0.75em;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-around;
-    }
     li.abilityLine {
-      flex: 1;
-      display: flex;
       padding: 10pt;
+      display: flex;
       &.flash {
         background: #f1b31c;
       }
@@ -52,19 +47,22 @@ const Wrapper = styled.div`
         padding-left: 10pt;
         text-align: left;
       }
-      @media (max-width: ${breakpointSmall}) {
+    }
+  }
+  @media (max-width: ${breakpointSmall}) {
+    ul.scores {
+      font-size: 0.75em;
+      display: flex;
+      flex-direction: row;
+      li.abilityLine {
         flex-direction: column;
-        justify-content: center;
         padding: 5pt;
-
         .value {
           padding-left: 0;
         }
       }
     }
   }
-  background: #ffeb3b;
-  border-radius: 5pt;
 `;
 
 interface CardInfoProps {

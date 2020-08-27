@@ -1,4 +1,4 @@
-import { OpenCard, BattleState, Phase, PlayerData } from './types';
+import { OpenCard, BattleState, PlayerData } from './types';
 
 export type BattleAction =
   | { actionType: 'Noop' }
@@ -7,10 +7,7 @@ export type BattleAction =
       actionType: 'Loaded';
       payload: Array<OpenCard[]>;
     }
-  | { actionType: 'NextPlayer' }
-  | { actionType: 'TakeTopCard'; playerIndex: number }
-  | { actionType: 'SetPhase'; phase: Phase }
-  | { actionType: 'SetActiveIndex'; index: number }
+  | { actionType: 'TakeTopCard' }
   | { actionType: 'ShowLeaderHand' }
   | { actionType: 'RollSkills' }
   | { actionType: 'Select' }
@@ -26,6 +23,9 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
   console.log('State:', state.phase, ' + ', action.actionType);
   switch (action.actionType) {
     case 'TakeTopCard':
+      const allAliveHaveHands = state.players.every((player: PlayerData) => {
+        return player.hand || player.stack.length === 0;
+      });
       return {
         ...state,
         players: state.players.map((player: PlayerData, key) => {
@@ -38,7 +38,8 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
           }
           return player;
         }),
-        activeIndex: (state.activeIndex + 1) % state.players.length,
+        activeIndex: allAliveHaveHands ? state.activeIndex : (state.activeIndex + 1) % state.players.length,
+        phase: allAliveHaveHands ? 'closed' : 'clear',
       };
 
     case 'StartLoading':
@@ -57,12 +58,6 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
           };
         }),
         phase: 'clear',
-      };
-
-    case 'SetPhase':
-      return {
-        ...state,
-        phase: action.phase,
       };
 
     case 'ShowLeaderHand':
@@ -117,6 +112,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         activeIndex: (state.activeIndex + 1) % state.players.length,
         selectedSkill: 1,
       };
+
     case 'ShowHand':
       const stateAfterShowHand: BattleState = {
         ...state,
@@ -149,6 +145,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         ...state,
         phase: 'selected_stopped',
       };
+
     case 'FindWinner':
       const selectedSkillValues = state.players.map((player: PlayerData) => {
         if (!player.hand) {
@@ -261,15 +258,7 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
       if (allHaveNothing) {
         return { actionType: 'StartLoading' };
       }
-      if (activePlayer.hand === undefined && activePlayer.stack.length > 0) {
-        return { actionType: 'TakeTopCard', playerIndex: 123 };
-      }
-      const allAliveHaveHands = state.players.every((player: PlayerData) => {
-        return player.hand || player.stack.length === 0;
-      });
-      if (allAliveHaveHands) {
-        return { actionType: 'SetPhase', phase: 'closed' };
-      } else throw new Error('Error while dealing in clear');
+      return { actionType: 'TakeTopCard' };
     case 'closed':
       return { actionType: 'ShowLeaderHand' };
     case 'one_open':
@@ -284,18 +273,15 @@ export const getNaturalAction = (state: BattleState): BattleAction => {
         return { actionType: 'StopBeforeShowHand' };
       }
       return { actionType: 'ShowHand' };
-
     case 'all_open':
       if (state.winnerIndex === undefined) {
         return { actionType: 'FindWinner' };
-      } else {
-        return { actionType: 'GiveHandToWinnerStack' };
       }
+      return { actionType: 'GiveHandToWinnerStack' };
     case 'finalize':
       const playersStillHavingCards = state.players.filter((player: PlayerData) => {
         return player.stack.length > 0 || player.hand;
       });
-
       if (playersStillHavingCards.length > 1) {
         return { actionType: 'EndTrick' };
       }
