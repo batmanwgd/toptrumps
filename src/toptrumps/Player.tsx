@@ -96,7 +96,7 @@ export interface PlayerProps {
 const fillerCardProps: Card = {
   name: '???',
   open: true,
-  roll: false,
+  rolling: false,
   type: 'open',
   skills: {
     cargoCapacity: 0,

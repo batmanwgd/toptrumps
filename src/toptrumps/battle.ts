@@ -91,7 +91,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
             if (!hand) {
               throw new Error('Leader has no hand so cannot roll it');
             }
-            const openHand: OpenCard = { ...hand, roll: true };
+            const openHand: OpenCard = { ...hand, rolling: true };
             return { ...player, hand: openHand };
           }
           return player;
@@ -108,7 +108,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
             if (!hand) {
               throw new Error('Leader has no hand so cannot roll it');
             }
-            const openHand: OpenCard = { ...hand, roll: false };
+            const openHand: OpenCard = { ...hand, rolling: false };
             return { ...player, hand: openHand };
           }
           return player;

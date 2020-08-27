@@ -59,17 +59,15 @@ export const CardInfo: React.FC<CardInfoProps> = (props: CardInfoProps) => {
 
   const [flash, setFlash] = useState<number>(-1);
 
+  const { selectedSkill } = useBattleContext();
+  const rolling = card.rolling;
   useEffect(() => {
-    if (card.roll) {
+    if (rolling) {
       setTimeout(() => {
         setFlash((flash + 1) % 4);
       }, 200);
-    } else {
-      setFlash(-1);
     }
-  }, [flash, card.roll]);
-
-  const { selectedSkill } = useBattleContext();
+  }, [flash, rolling]);
 
   return (
     <Wrapper className="card">

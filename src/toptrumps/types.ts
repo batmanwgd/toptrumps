@@ -14,7 +14,7 @@ export interface OpenCard {
   name: string;
   skills: Skills;
   open: boolean;
-  roll: boolean;
+  rolling: boolean;
 }
 
 export type Card = OpenCard | ClosedCard;

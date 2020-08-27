@@ -26,7 +26,7 @@ export const loadRandomCards = (): OpenCard[] => {
           cargoCapacity: spaceship.cargoCapacity,
         },
         open: false,
-        roll: false,
+        rolling: false,
       };
     });
   return allCards;
