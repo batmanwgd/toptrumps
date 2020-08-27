@@ -5,6 +5,7 @@ import { Card as CardType, OpenCard } from './types';
 import { SizedCardFlip } from './SizedCardFlip';
 import { CardInfo } from './CardInfo';
 import { useBattleContext } from './BattleContext';
+import { usePlayerContext } from './PlayerContext';
 
 const appear = keyframes`
   from {
@@ -48,12 +49,13 @@ export const Card: React.FC<CardProps> = (props: CardProps) => {
   const openCard = card as OpenCard;
 
   const { choices } = useBattleContext();
+  const { isHuman } = usePlayerContext();
 
-  const active = choices.length === 1;
+  const active = choices.length === 1 && isHuman;
 
   const handleBackClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    if (choices.length === 1) {
+    if (active) {
       const choiceCallback = choices[0];
       choiceCallback();
     }

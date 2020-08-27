@@ -84,12 +84,12 @@ const Wrapper = styled.div`
   }
 `;
 
-interface PlayerProps {
+export interface PlayerProps {
   name: string;
   card?: Card;
   ghostCard?: Card;
   stackLength: number;
-  actionRequired: boolean;
+  isHuman: boolean;
   isWinner: boolean;
 }
 

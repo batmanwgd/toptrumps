@@ -6,6 +6,7 @@ import { BattleAction, battleReducer, getNaturalAction } from './battle';
 import { BattleState, PlayerData } from './types';
 import { useBattleContext } from './BattleContext';
 import { loadRandomCards } from './loader';
+import { PlayerProvider } from './PlayerContext';
 
 const initialBattleState: BattleState = {
   players: [
@@ -65,7 +66,7 @@ export const Board: React.FC = () => {
       card: data.hand,
       ghostCard: data.ghostHand,
       stackLength: data.stack.length,
-      actionRequired: false,
+      isHuman: data.nature === 'human',
       isWinner: isWinner,
     };
   };
@@ -143,7 +144,12 @@ export const Board: React.FC = () => {
         <div className="players them">
           {foes.map((p: PlayerData, key: number) => {
             const isWinner = key === state.winnerIndex;
-            return <Player key={key} {...playerDataToProps(p, isWinner)} />;
+            const playerProps = playerDataToProps(p, isWinner);
+            return (
+              <PlayerProvider key={key} {...playerProps}>
+                <Player {...playerProps} />
+              </PlayerProvider>
+            );
           })}
         </div>
       </div>
