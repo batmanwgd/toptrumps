@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import { Card as CardType, OpenCard } from './types';
-import { SizedCardFlip } from './SizedCardFlip';
+import ReactCardFlip from 'react-card-flip';
 import { CardInfo } from './CardInfo';
 import { useBattleContext } from './BattleContext';
 import { usePlayerContext } from './PlayerContext';
@@ -17,6 +17,12 @@ const appear = keyframes`
 `;
 
 const Wrapper = styled.div`
+  height: 100%;
+
+  .react-card-flip {
+    height: 100%;
+  }
+
   .back {
     animation: ${appear} 0.2s linear;
     border: 3px solid #61b2e4;
@@ -63,12 +69,12 @@ export const Card: React.FC<CardProps> = (props: CardProps) => {
 
   return (
     <Wrapper>
-      <SizedCardFlip isFlipped={openCard.open} flipDirection="horizontal">
+      <ReactCardFlip isFlipped={openCard.open} flipDirection="horizontal">
         <div className={`back ${active ? 'active' : ''}`} onClick={handleBackClick}>
           {active && <div className="text">Show your card!</div>}
         </div>
         <CardInfo card={card} />
-      </SizedCardFlip>
+      </ReactCardFlip>
     </Wrapper>
   );
 };

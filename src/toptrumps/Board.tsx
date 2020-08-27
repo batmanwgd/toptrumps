@@ -83,7 +83,7 @@ export const Board: React.FC = () => {
           payload: [[c1], [c2], [c3]],
         });
         setTick(tick + 1);
-      }, 5000);
+      }, 500);
     } else if (state.phase === 'selected_stopped') {
       setChoices([
         () => {

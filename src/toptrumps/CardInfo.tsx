@@ -10,6 +10,10 @@ const Wrapper = styled.div`
   border: 3px solid #f1b31c;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  justify-content: space-around;
+
   .name {
     font-size: 0.75em;
     padding-top: 10pt;
@@ -17,19 +21,23 @@ const Wrapper = styled.div`
   ul.scores {
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
 
     padding-left: 0;
     margin: 0;
     list-style: none;
 
     @media (max-width: ${breakpointSmall}) {
-      display: grid;
-      grid-template-columns: auto auto;
+      font-size: 0.75em;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
     }
     li.abilityLine {
+      flex: 1;
       display: flex;
       padding: 10pt;
-      content-justify: space-between;
       &.flash {
         background: #f1b31c;
       }
@@ -43,6 +51,15 @@ const Wrapper = styled.div`
       .value {
         padding-left: 10pt;
         text-align: left;
+      }
+      @media (max-width: ${breakpointSmall}) {
+        flex-direction: column;
+        justify-content: center;
+        padding: 5pt;
+
+        .value {
+          padding-left: 0;
+        }
       }
     }
   }
@@ -60,14 +77,16 @@ export const CardInfo: React.FC<CardInfoProps> = (props: CardInfoProps) => {
   const [flash, setFlash] = useState<number>(-1);
 
   const { selectedSkill } = useBattleContext();
-  const rolling = card.rolling;
+  const rolling = card.rolling && selectedSkill < 0;
   useEffect(() => {
     if (rolling) {
       setTimeout(() => {
         setFlash((flash + 1) % 4);
       }, 200);
+    } else if (selectedSkill >= 0) {
+      setFlash(-1);
     }
-  }, [flash, rolling]);
+  }, [flash, rolling, selectedSkill]);
 
   return (
     <Wrapper className="card">
