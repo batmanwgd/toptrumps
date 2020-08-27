@@ -232,6 +232,21 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         phase: 'finalize_stopped',
       };
 
+    case 'EndTrick':
+      return {
+        ...state,
+        players: state.players.map((player: PlayerData) => {
+          return {
+            ...player,
+            ghostHand: undefined,
+            hand: undefined,
+          };
+        }),
+        winnerIndex: undefined,
+        activeIndex: state.leaderIndex,
+        phase: 'clear',
+        selectedSkill: undefined,
+      };
     case 'EndGame':
       return {
         ...state,

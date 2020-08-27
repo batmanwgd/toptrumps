@@ -66,12 +66,12 @@ export const Board: React.FC = () => {
         const [c1, c2, c3, c4, c5, c6] = loadRandomCards();
         dispatch({
           actionType: 'Loaded',
-          payload: [[c1], [c2], [c3]],
-          // payload: [
-          //   [c1, c4],
-          //   [c2, c5],
-          //   [c3, c6],
-          // ],
+          // payload: [[c1], [c2], [c3]],
+          payload: [
+            [c1, c4],
+            [c2, c5],
+            [c3, c6],
+          ],
         });
         setTick(tick + 1);
       }, 500);
