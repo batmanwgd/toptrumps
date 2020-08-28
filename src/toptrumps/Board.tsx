@@ -7,6 +7,7 @@ import { PlayerData } from './types';
 import { useBattleContext } from './BattleContext';
 import { loadRandomCards } from './loader';
 import { PlayerProvider } from './PlayerContext';
+import { Link } from 'react-router-dom';
 
 const playerDataToProps = (data: PlayerData, isWinner: boolean) => {
   return {
@@ -18,6 +19,19 @@ const playerDataToProps = (data: PlayerData, isWinner: boolean) => {
     isWinner: isWinner,
   };
 };
+const Winner = styled.div`
+  background: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  text-transform: uppercase;
+  .winner {
+    color: red;
+    flex: 0;
+  }
+`;
 
 const Wrapper = styled.div`
   font-size: 1em;
@@ -156,6 +170,16 @@ export const Board: React.FC = () => {
       setTick(tick + 1);
     }, tickDelay);
   }, [tick]);
+
+  if (state.phase === 'finalize_stopped') {
+    return (
+      <Winner>
+        <div className="winner">Winner 🎉</div>
+        {state.winnerIndex !== undefined && <div className="">{state.players[state.winnerIndex].name}</div>}
+        <Link to="/">Back to settings</Link>
+      </Winner>
+    );
+  }
 
   return (
     <Wrapper>

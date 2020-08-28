@@ -136,10 +136,7 @@ export const Player: React.FC<PlayerProps> = (props: PlayerProps) => {
     <Wrapper>
       <div className={`player ${out ? 'out' : ''} ${isFinalWinner ? 'winner' : ''}`} onClick={handlePlayerClick}>
         <div className="title">
-          <div className="name">
-            {props.name}
-            {isFinalWinner && <span className="winner"> Winner 🎉</span>}
-          </div>
+          <div className="name">{props.name}</div>
           <div className="stack">{props.stackLength}</div>
         </div>
         <div className="player-content">
