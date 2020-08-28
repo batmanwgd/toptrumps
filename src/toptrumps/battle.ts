@@ -218,7 +218,7 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
               if (key === state.leaderIndex) {
                 return {
                   ...player,
-                  stack: [...player.stack, ghostHand],
+                  stack: [ghostHand, ...player.stack],
                 };
               }
               return player;

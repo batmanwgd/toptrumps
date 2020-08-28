@@ -108,7 +108,7 @@ export const CardInfo: React.FC<CardInfoProps> = (props: CardInfoProps) => {
     <Wrapper className="card">
       <div className="name">{card.name}</div>
       <ul className="scores">
-      <li
+        <li
           className={`abilityLine ${selectable ? 'selectable' : ''} ${flash === 0 ? 'flash' : ''} ${
             selectedSkill === 0 ? 'selected' : ''
           }`}

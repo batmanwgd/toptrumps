@@ -59,9 +59,9 @@ describe('', () => {
     // expect(finalState.players[0].stack.length).toBe(3);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(finalState.players[0].stack.map((c: any) => c.name)).toEqual([
-      'Star Destroyer',
-      'Naboo fighter',
       'Belbullab-22 starfighter',
+      'Naboo fighter',
+      'Star Destroyer',
     ]);
   });
 });
