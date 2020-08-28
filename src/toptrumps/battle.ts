@@ -180,7 +180,22 @@ export const battleReducer = (state: BattleState, action: BattleAction): BattleS
         return 0;
       });
 
-      const winnerIndex = selectedSkillValues.indexOf(Math.max(...selectedSkillValues));
+      const max = Math.max(...selectedSkillValues);
+
+      const getMaxIndex = (values: number[], max: number) => {
+        for (let i = state.leaderIndex; i < values.length; i++) {
+          if (values[i] == max) {
+            return i;
+          }
+        }
+        for (let i = 0; i < values.length; i++) {
+          if (values[i] == max) {
+            return i;
+          }
+        }
+        throw new Error('Max value not found');
+      };
+      const winnerIndex = getMaxIndex(selectedSkillValues, max);
       const playerHavingSomething = state.players.filter((player: PlayerData) => {
         return player.hand || player.stack.length > 0;
       });
