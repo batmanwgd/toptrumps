@@ -1,12 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { breakpointSmall } from '../toptrumps/constants';
-
-interface SetupState {
-  opponents: (string | undefined)[];
-  user: string;
-  cardNumber: number;
-}
+import { useSettingsContext } from './SettingsContext';
+import { Link, useHistory } from 'react-router-dom';
 
 const Item = styled.div`
   padding-bottom: 5pt;
@@ -96,11 +92,7 @@ const Wrapper = styled.div`
 `;
 
 export const Form: React.FC = () => {
-  const [state, setState] = useState<SetupState>({
-    opponents: ['Alice', undefined, undefined],
-    user: 'me',
-    cardNumber: 3,
-  });
+  const { state, setState } = useSettingsContext();
 
   const addOpponent = (key: number) => {
     const opponents = state.opponents.map((opponent: string | undefined, index: number) => {
@@ -170,10 +162,11 @@ export const Form: React.FC = () => {
     });
   };
 
-
+  const history = useHistory();
   const handleSubmit = (ev: React.FormEvent<HTMLButtonElement>) => {
     ev.preventDefault();
     console.log('CONFIG STATE', state);
+    history.push('/game');
   };
   return (
     <Wrapper>
@@ -237,6 +230,7 @@ export const Form: React.FC = () => {
 
       <div className="footer">
         <button onClick={handleSubmit}>Play Top trumps</button>
+        <Link to="/game">Game</Link>
       </div>
     </Wrapper>
   );

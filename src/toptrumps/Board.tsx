@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import { Player } from './Player';
 import { breakpointSmall } from './constants';
 import { getNaturalAction } from './battle';
-import { PlayerData } from './types';
+import { PlayerData, OpenCard } from './types';
 import { useBattleContext } from './BattleContext';
 import { loadRandomCards } from './loader';
 import { PlayerProvider } from './PlayerContext';
 import { Link } from 'react-router-dom';
+import { useSettingsContext } from '../setup/SettingsContext';
 
 const playerDataToProps = (data: PlayerData, isWinner: boolean) => {
   return {
@@ -67,25 +68,39 @@ const Wrapper = styled.div`
 `;
 
 export const Board: React.FC = () => {
+  const { state: settings } = useSettingsContext();
+
   const { state, dispatch, setChoices } = useBattleContext();
 
   const foes = state.players.slice(0, -1);
   const me: PlayerData = state.players.slice(-1)[0];
 
   const [tick, setTick] = useState<number>(0);
+
+  useEffect(() => {
+    dispatch({ actionType: 'Reset', settings });
+  }, [settings]);
+
   useEffect(() => {
     if (state.phase === 'loading') {
       // TODO move this to apollo hook later
       setTimeout(() => {
-        const [c1, c2, c3, c4, c5, c6] = loadRandomCards();
+        const randomCards = loadRandomCards();
+        const cardNumber = settings.cardNumber;
+        // const playerCount = state.players.length;
+
+        const payload = [];
+        for (let i = 0; i < state.players.length; i++) {
+          const stack = [];
+          for (let j = 0; j < cardNumber; j++) {
+            stack[j] = randomCards.shift() as OpenCard;
+          }
+          payload[i] = stack;
+        }
         dispatch({
           actionType: 'Loaded',
           // payload: [[c1], [c2], [c3]],
-          payload: [
-            [c1, c4],
-            [c2, c5],
-            [c3, c6],
-          ],
+          payload,
         });
         setTick(tick + 1);
       }, 500);

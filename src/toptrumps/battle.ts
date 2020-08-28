@@ -1,7 +1,9 @@
 import { OpenCard, BattleState, PlayerData } from './types';
+import { SettingsState } from '../setup/settings';
 
 export type BattleAction =
   | { actionType: 'Noop' }
+  | { actionType: 'Reset'; settings: SettingsState }
   | { actionType: 'StartLoading' }
   | {
       actionType: 'Loaded';
@@ -27,11 +29,32 @@ const nextActiveIndex = (state: BattleState): number => {
     return (state.activeIndex + 2) % state.players.length;
   }
   return nextIndex;
-}
+};
 
 export const battleReducer = (state: BattleState, action: BattleAction): BattleState => {
   console.log('State:', state.phase, ' + ', action.actionType);
   switch (action.actionType) {
+    case 'Reset':
+      const opponents: string[] = <string[]>action.settings.opponents.filter((name?: string) => name !== undefined);
+      return {
+        players: [
+          ...opponents.map(
+            (name: string): PlayerData => ({
+              name,
+              stack: [],
+              nature: 'bot',
+            }),
+          ),
+          {
+            name: action.settings.user,
+            stack: [],
+            nature: 'human',
+          },
+        ],
+        leaderIndex: 0,
+        activeIndex: 0,
+        phase: 'clear',
+      };
     case 'TakeTopCard':
       const allAliveHaveHands = state.players.every((player: PlayerData) => {
         return player.hand || player.stack.length === 0;
