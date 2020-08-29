@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/toptrumps/static/css/main.c7ab4568.chunk.css",
-    "main.js": "/toptrumps/static/js/main.2ef09e06.chunk.js",
-    "main.js.map": "/toptrumps/static/js/main.2ef09e06.chunk.js.map",
+    "main.js": "/toptrumps/static/js/main.b112a726.chunk.js",
+    "main.js.map": "/toptrumps/static/js/main.b112a726.chunk.js.map",
     "runtime-main.js": "/toptrumps/static/js/runtime-main.64e4d1ad.js",
     "runtime-main.js.map": "/toptrumps/static/js/runtime-main.64e4d1ad.js.map",
     "static/js/2.8945d2f7.chunk.js": "/toptrumps/static/js/2.8945d2f7.chunk.js",
     "static/js/2.8945d2f7.chunk.js.map": "/toptrumps/static/js/2.8945d2f7.chunk.js.map",
     "index.html": "/toptrumps/index.html",
-    "precache-manifest.c2ddb4afd36614fa61fdaf155e934389.js": "/toptrumps/precache-manifest.c2ddb4afd36614fa61fdaf155e934389.js",
+    "precache-manifest.7bc0a0189f1a3eef7c60a600b7375c53.js": "/toptrumps/precache-manifest.7bc0a0189f1a3eef7c60a600b7375c53.js",
     "service-worker.js": "/toptrumps/service-worker.js",
     "static/css/main.c7ab4568.chunk.css.map": "/toptrumps/static/css/main.c7ab4568.chunk.css.map",
     "static/js/2.8945d2f7.chunk.js.LICENSE.txt": "/toptrumps/static/js/2.8945d2f7.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.64e4d1ad.js",
     "static/js/2.8945d2f7.chunk.js",
     "static/css/main.c7ab4568.chunk.css",
-    "static/js/main.2ef09e06.chunk.js"
+    "static/js/main.b112a726.chunk.js"
   ]
 }

@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "93383f3489a815cd478084d5689be9ed",
+    "revision": "179123aa3fe38337c45635d193e6bb04",
     "url": "/toptrumps/index.html"
   },
   {
-    "revision": "01bada92e62f07326867",
+    "revision": "b06d23c2e4cfe36b92d7",
     "url": "/toptrumps/static/css/main.c7ab4568.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/toptrumps/static/js/2.8945d2f7.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "01bada92e62f07326867",
-    "url": "/toptrumps/static/js/main.2ef09e06.chunk.js"
+    "revision": "b06d23c2e4cfe36b92d7",
+    "url": "/toptrumps/static/js/main.b112a726.chunk.js"
   },
   {
     "revision": "4b4e3f0a686a7c673b95",
