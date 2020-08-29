@@ -12,3 +12,6 @@ into:
 
 unrootify:
 	sudo chown -R $$(id -u):$$(id -g) .
+
+build:
+	docker-compose run --rm battle "npm run build"
