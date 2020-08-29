@@ -99,7 +99,6 @@ export const Board: React.FC = () => {
         }
         dispatch({
           actionType: 'Loaded',
-          // payload: [[c1], [c2], [c3]],
           payload,
         });
         setTick(tick + 1);

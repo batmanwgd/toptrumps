@@ -2,10 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { breakpointSmall } from '../toptrumps/constants';
 import { useSettingsContext } from './SettingsContext';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const Item = styled.div`
-  padding-bottom: 5pt;
+  padding-bottom: 10pt;
   color: white;
   width: 240px;
   display: flex;
@@ -15,6 +15,10 @@ const Item = styled.div`
     cursor: pointer;
   }
 
+  & > .add {
+    height: 40px;
+  }
+
   @media (max-width: ${breakpointSmall}) {
     width: 100%;
 
@@ -22,15 +26,30 @@ const Item = styled.div`
 
     flex-direction: row;
     justify-content: center;
+    align-items: baseline;
 
     & > input {
       flex: 1 0;
     }
+    & > .add {
+      border: 1px dotted white;
+    }
 
+    & > .add {
+      height: 40px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      * {
+
+      }
+    }
+  }
     & > label {
       flex: 0 1;
+      padding: 0 5pt;
     }
-    height: 40px;
   }
 `;
 
@@ -44,11 +63,24 @@ const Wrapper = styled.div`
 
   text-transform: uppercase;
 
+  input {
+    height: 40px;
+  }
+  select {
+    height: 40px;
+    width: 240px;
+    padding: 0 10pt;
+
+    option {
+      padding: 10pt;
+    }
+  }
   h2 {
     border: 0;
     border-bottom: 2px solid white;
     color: white;
     font-size: 0.75em;
+    padding-top: 20pt;
   }
   .content {
     height: 100%;
@@ -67,11 +99,15 @@ const Wrapper = styled.div`
     flex: 0 1;
     margin: 0 auto;
     button {
+      border: 3px solid #d22f27;
+      background: #ea5a47;
+      cursor: pointer;
       text-transform: uppercase;
       cursor: pointer;
       display: block;
       height: 60px;
       width: 240px;
+      color: white;
     }
   }
 
@@ -165,7 +201,10 @@ export const Form: React.FC = () => {
   const history = useHistory();
   const handleSubmit = (ev: React.FormEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-    console.log('CONFIG STATE', state);
+    if (state.opponents.every((opponent?: string) => opponent === undefined)) {
+      alert('You must select at least one opponent');
+      return;
+    }
     history.push('/game');
   };
   return (
@@ -191,7 +230,7 @@ export const Form: React.FC = () => {
                 <Item key={key}>
                   <input id={`input-${key}`} defaultValue={name} onChange={handleEdit} />
                   <label className="clickable" htmlFor={`input-${key}`} onClick={handleRemove}>
-                    remove ⊗
+                    remove
                   </label>
                 </Item>
               );
@@ -199,7 +238,7 @@ export const Form: React.FC = () => {
             if (name === undefined) {
               return (
                 <Item onClick={handleAdd}>
-                  <div className="clickable">
+                  <div className="add clickable">
                     <span>⊕</span>Add Opponent
                   </div>
                 </Item>
@@ -208,7 +247,7 @@ export const Form: React.FC = () => {
           })}
           {state.opponents.length < 3 && (
             <Item onClick={handleAddOpponent}>
-              <div className="clickable">
+              <div className="add clickable">
                 <span>⊕</span>Add Opponent
               </div>
             </Item>
@@ -230,7 +269,6 @@ export const Form: React.FC = () => {
 
       <div className="footer">
         <button onClick={handleSubmit}>Play Top trumps</button>
-        <Link to="/game">Game</Link>
       </div>
     </Wrapper>
   );
