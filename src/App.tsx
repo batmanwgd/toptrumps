@@ -12,7 +12,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <SettingsProvider>
-        <Router>
+        <Router basename="/toptrumps">
           <Switch>
             <Route path="/game">
               <BattleProvider>
