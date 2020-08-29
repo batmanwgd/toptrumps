@@ -36,7 +36,7 @@ const Item = styled.div`
     }
 
     & > .add {
-      height: 40px;
+      height: 30px;
       width: 100%;
       display: flex;
       justify-content: center;
@@ -64,10 +64,10 @@ const Wrapper = styled.div`
   text-transform: uppercase;
 
   input {
-    height: 40px;
+    height: 30px;
   }
   select {
-    height: 40px;
+    height: 30px;
     width: 240px;
     padding: 0 10pt;
 
@@ -80,7 +80,7 @@ const Wrapper = styled.div`
     border-bottom: 2px solid white;
     color: white;
     font-size: 0.75em;
-    padding-top: 20pt;
+    padding-top: 10pt;
   }
   .content {
     height: 100%;
